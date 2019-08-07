@@ -57,6 +57,7 @@
 
 2. 在Android Application让它实现KodeinAware接口声明依赖绑定 .
 Example: an Android Application class that implements KodeinAware
+
         `class MyApp : Application(), KodeinAware {
           override val kodein by Kodein.lazy { 
               /* bindings */
