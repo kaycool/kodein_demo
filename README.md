@@ -79,8 +79,9 @@ Example: an Android Application class that implements KodeinAware
 >kodein 结果将被缓存 而不是在使用时多次被创建
 
 #### <h2 id="2.2">2. 成为 KodeinAware</h2>
-让您的Android类成为KodeinAware非常简单
+让您的Android类成为KodeinAware非常简单<br>
 示例：KodeinAware in Android Activity
+
 
 `class MyActivity : Activity(), KodeinAware {
 
@@ -96,13 +97,52 @@ Example: an Android Application class that implements KodeinAware
 
 }`
 
-① 通过上下文检索一个应用的 Kodein 对象
+① 通过上下文检索一个应用的 Kodein 对象<br>
 ② 因为Kodein所有的过程都是延迟加载，kodein 和 DataSource 对象都是仅在被需要的时候才开始检索
 
 
 
 #### <h2 id="2.3">3. 使用Trigger</h2>
+If you want all dependencies to be retrieved at onCreate, you can very easily use a trigger:
+Example: using an trigger in a KodeinAware Android Activity
+
+`class MyActivity : Activity(), KodeinAware {
+
+    override val kodein by kodein()
+
+    override val kodeinTrigger = KodeinTrigger() 
+
+    val ds: DataSource by instance()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        kodeinTrigger.trigger() 
+        /* ... */
+    }
+
+}`
+
+①、	Just create a trigger, and Kodein will automatically use it.
+②、	The kodein AND all dependencies will both be retrieved at that time.
+
+>Using this approach has an important advantage: as all dependencies are retrieved in onCreate, you can be sure that all your dependencies have correctly been retrieved, meaning that there were no non-declared dependency.
+If you only use instance (no provider or factory), you can also be sure that there were no dependency loop.
+
 #### <h2 id="2.4">4. View Models</h2>
+To use Kodein, you need an Android context. For that, View Models need to implement AndroidViewModel.
+
+It is very easy to use Kodein inside View Models:
+
+>If you prefer your View Models to be independant from Kodein, you can use a View Model Factory.
+Example: using an trigger in a KodeinAware Android Activity
+
+`class MyViewModel(app: Application) : ApplicationViewModel(app), KodeinAware {
+
+    override val kodein by kodein() 
+
+    val repository : Repository by instance()
+}`
+①、	Retrieving the application’s Kodein container.
 
 ###  <h2 id="3">三.Android module</h2>
 
