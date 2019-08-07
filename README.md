@@ -40,8 +40,8 @@
 如何使用kodein-android：
 1. 在你的app build.gradle 文件中添加以下的依赖：
 
-    implementation 'org.kodein.di:kodein-di-generic-jvm:6.3.3'
-    implementation 'org.kodein.di:kodein-di-framework-android-???:6.3.3'
+        implementation 'org.kodein.di:kodein-di-generic-jvm:6.3.3'
+        implementation 'org.kodein.di:kodein-di-framework-android-???:6.3.3'
     
     Kodein 提供的支持库有:
     
