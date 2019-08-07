@@ -71,9 +71,37 @@ Example: an Android Application class that implements KodeinAware
 
 
 ###  <h2 id="2">二.Retrieving</h2>
-#### <h2 id="2.1">1. Getting a Kodein object</h2>
-#### <h2 id="2.2">2. Being KodeinAware</h2>
-#### <h2 id="2.3">3. Using a Trigger</h2>
+#### <h2 id="2.1">1. 获取kodein对象</h2>
+你可以使用以下方式获取 Kodein 对象
+* 在Android上下文类中（比如Context，Activity，Fragment等）使用kodein()
+* 在其它非上下文类中(比如不具备上下文的Utils类等）使用 kodein(context) or kodein { context }
+>kodein 方法仅在你的Android Application实现KodeinAware接口才有效<br>
+>kodein 结果将被缓存 而不是在使用时多次被创建
+
+#### <h2 id="2.2">2. 成为 KodeinAware</h2>
+让您的Android类成为KodeinAware非常简单
+示例：KodeinAware in Android Activity
+
+`class MyActivity : Activity(), KodeinAware {
+
+    override val kodein by kodein() 
+
+    val ds: DataSource by instance()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ds.connect() 
+        /* ... */
+    }
+
+}`
+
+① 通过上下文检索一个应用的 Kodein 对象
+② 因为Kodein所有的过程都是延迟加载，kodein 和 DataSource 对象都是仅在被需要的时候才开始检索
+
+
+
+#### <h2 id="2.3">3. 使用Trigger</h2>
 #### <h2 id="2.4">4. View Models</h2>
 
 ###  <h2 id="3">三.Android module</h2>
