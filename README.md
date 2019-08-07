@@ -45,11 +45,11 @@
     
     Kodein 提供的支持库有:
     
-    |  类型   |  依赖内容 |
+    |  Android类型   |  依赖具体内容 |
     |  ----  | ----  |
-    |Barebone Android  | kodein-di-framework-android-core |
-    | Android + Support library  | kodein-di-framework-android-support |
-    | Android + AndroidX library  | kodein-di-framework-android-x |
+    |Barebone Android  |        implementation 'org.kodein.di:kodein-di-framework-android-core:6.3.3'
+    |Android + Support library  |implementation 'org.kodein.di:kodein-di-framework-android-support:6.3.3'  |
+    |Android + AndroidX library  |implementation 'org.kodein.di:kodein-di-framework-android-x:6.3.3' |
 
 
 ###  <h2 id="2">二.Retrieving</h2>
