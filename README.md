@@ -1,6 +1,6 @@
 # Kodein DI on Android
-如何使用kodein：使用依赖或者导入kodein-android的library
-kodein-android扩展：使用kodein为项目添加多个android特定的公用对象，你根据需要决定是否依赖它，您可以前往[Android demo project](https://github.com/Kodein-Framework/Kodein-DI/tree/6.3/demo/demo-android)查看用法
+>如何使用kodein：使用依赖或者导入kodein-android的library<br>
+>kodein-android扩展：使用kodein为项目添加多个android特定的公用对象，你根据需要决定是否依赖它，您可以前往[Android demo project](https://github.com/Kodein-Framework/Kodein-DI/tree/6.3/demo/demo-android)查看用法
 
 * [一.Install](#1)
 
