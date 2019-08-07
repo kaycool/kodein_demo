@@ -84,17 +84,13 @@ Example: an Android Application class that implements KodeinAware
 
 
 `class MyActivity : Activity(), KodeinAware {
-
     override val kodein by kodein() 
-
     val ds: DataSource by instance()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ds.connect() 
         /* ... */
     }
-
 }`
 
 ① 通过上下文检索一个应用的 Kodein 对象<br>
