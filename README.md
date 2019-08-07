@@ -45,7 +45,7 @@
     
     Kodein 提供的支持库有:
     
-    |     |   |
+    |  类型   |  依赖内容 |
     |  ----  | ----  |
     |Barebone Android  | kodein-di-framework-android-core |
     | Android + Support library  | kodein-di-framework-android-support |
