@@ -51,6 +51,23 @@
     |Android + Support library  |implementation 'org.kodein.di:kodein-di-framework-android-support:6.3.3'  |
     |Android + AndroidX library  |implementation 'org.kodein.di:kodein-di-framework-android-x:6.3.3' |
 
+>除了声明Kodein-Android依赖外，必须声明kodein-di-generic-jvm或者kodein-di-erased-jvm 
+
+>如果您的项目使用的是SupportFragment，您必须依赖-support库，否则您应该依赖 android-x
+
+2. 在Android Application让它实现KodeinAware接口声明依赖绑定 .
+Example: an Android Application class that implements KodeinAware
+        `class MyApp : Application(), KodeinAware {
+          override val kodein by Kodein.lazy { 
+              /* bindings */
+          }
+        }`
+        `使用Kodein.lazy可以在绑定时访问Context`
+        > 不要忘记在minifest当中声明MyApp
+3.在Activities，Fragments 和其它context实现KodeinAware接口 android类中，使用kodein方法取回这些声明的Kodein对象
+
+4. 检索您的依赖项!
+
 
 ###  <h2 id="2">二.Retrieving</h2>
 #### <h2 id="2.1">1. Getting a Kodein object</h2>
