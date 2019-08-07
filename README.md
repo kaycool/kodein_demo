@@ -43,7 +43,7 @@
         implementation 'org.kodein.di:kodein-di-generic-jvm:6.3.3'
         implementation 'org.kodein.di:kodein-di-framework-android-???:6.3.3'
     
-    Kodein 提供的支持库有:
+    Kodein 提供以下支持库可供您选择，根据您项目依赖的support库的版本 Android support or AndroidX，来选择对应依赖。
     
     |  Android类型   |  依赖具体内容 |
     |  ----  | ----  |
