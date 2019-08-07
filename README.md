@@ -1,9 +1,6 @@
 # Kodein DI on Android
-You can use Kodein as-is in your Android project or use the util library kodein-android.
-
-Kodein does work on Android as-is. The kodein-android extension adds multiple android-specific utilities to Kodein.
-Using or not using this extension really depends on your needs.
-Have a look at the Android demo project!
+如何使用kodein：使用依赖或者导入kodein-android的library
+kodein-android扩展：使用kodein为项目添加多个android特定的公用对象，你根据需要决定是否依赖它，[!https://github.com/Kodein-Framework/Kodein-DI/tree/6.3/demo/demo-android](Android demo project)
 
 * [一.Install](#1)
 
