@@ -36,7 +36,18 @@
      * [View Model Factory](#8.3.2)
 
 
-###  <h2 id="1">一.Install]</h2>
+###  <h2 id="1">一.Install</h2>
+如何使用kodein-android：
+1. 在你的app build.gradle 文件中添加以下的依赖：
+    implementation 'org.kodein.di:kodein-di-generic-jvm:6.3.3'
+    implementation 'org.kodein.di:kodein-di-framework-android-???:6.3.3'
+    
+    Kodein 提供的支持库有:
+    |  ----  | ----  |
+    |Barebone Android  | kodein-di-framework-android-core |
+    | Android + Support library  | kodein-di-framework-android-support |
+    | Android + AndroidX library  | kodein-di-framework-android-x |
+
 
 ###  <h2 id="2">二.Retrieving</h2>
 #### <h2 id="2.1">1. Getting a Kodein object</h2>
