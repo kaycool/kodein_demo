@@ -62,8 +62,8 @@ Example: an Android Application class that implements KodeinAware
           override val kodein by Kodein.lazy { 
               /* bindings */
           }
-        }`
-        `使用Kodein.lazy可以在绑定时访问Context`
+        }
+        使用Kodein.lazy可以在绑定时访问Context`
         > 不要忘记在minifest当中声明MyApp
 3.在Activities，Fragments 和其它context实现KodeinAware接口 android类中，使用kodein方法取回这些声明的Kodein对象
 
