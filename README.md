@@ -156,20 +156,21 @@ Kodein-Android提出了一个module，可以轻松检索许多标准的Android�
 ① 可以是androidXModule或androidSupportModule或androidCoreModule
 
 您可以在Kodein-Android [module.kt](https://github.com/Kodein-Framework/Kodein-DI/blob/6.3/framework/android/kodein-di-framework-android-core/src/main/java/org/kodein/di/android/module.kt)文件中看到此module提供的所有内容
-示例: 使用kodein恢复LayoutInflater
+示例: 使用kodein获取LayoutInflater
 
 `class MyActivity : Activity(), KodeinAware {
     override val kodein by kodein()
     val inflater: LayoutInflater by instance() 
 }`
-If you are retrieving these classes inside a non-Android class, you need to define an Android Context as a Kodein context:
-Example: using kodein with a context to retrieve a LayoutInflater
+
+如果你是非Android 类中获取这些类，你需要确定一个Android Context 作为 Kodein context：
+示例：使用带有 context 的 kodein 去获取 LayoutInflater
 
 `val inflater: LayoutInflater by kodein.on(getActivity()).instance()`
 
 or
 
-Example: using kodein with a class context to retrieve a LayoutInflater
+示例：使用带有类context的kodein来获取LayoutInflater
 
 `class MyUtility(androidContext: Context) : KodeinAware {
 
@@ -180,7 +181,7 @@ Example: using kodein with a class context to retrieve a LayoutInflater
     val inflater: LayoutInflater by instance()
 }`
 
-① Defining the default context: the Android context to use to retrieve Android system services.
+① 定义一个默认的context：用于获取Android系统服务的Android context
 
 
 ###  <h2 id="4">四.Android context translators</h2>
