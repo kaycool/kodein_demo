@@ -58,7 +58,8 @@
 >如果您的项目使用的是SupportFragment，您必须依赖-support库，否则您应该依赖 android-x
 
 2. 在Android Application让它实现KodeinAware接口声明依赖绑定 .
-Example: an Android Application class that implements KodeinAware
+
+示例：实现KodeinAware的Android Application
 
 ```
 class MyApp : Application(), KodeinAware {
