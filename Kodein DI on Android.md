@@ -1,4 +1,4 @@
-[原英文地址](https://kodein.org/Kodein-DI/index.html?latest/android#_android_context_translators)
+[原英文文档地址](https://kodein.org/Kodein-DI/index.html?latest/android#_android_context_translators)
 
 # Kodein DI on Android
 >如何使用kodein：使用依赖或者导入kodein-android的library<br>
