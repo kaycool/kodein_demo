@@ -224,8 +224,6 @@ Kodein 为所有的component(Android or not)提供标准的作用域. 只要 con
 
 示例：使用 Activity 作用域
 
-Example: using an Activity scope
-
 ```
 val kodein = Kodein {
     bind<Controller>() with scoped(WeakContextScope.of<Activity>()).singleton { ControllerImpl(context) } 
@@ -271,10 +269,9 @@ kodein 函数将总是返回最近父层kodein，例如：在一个View或者Fra
 在一下代码示例中，MyActivity 包含 Fragments，并且这些fragments通过kodein()获取它们的Kodein 对象，它将获得MyActivity Kodein对象，而不是Application的Kodein对象
 
 #### <h2 id="6.2">2. Component based sub Kodein</h2>
-在Android，每个component
-In Android, each component has its own lifecycle, much like a "mini application". You may need to have dependencies that are defined only inside a specific component and its subcomponents (such as an activity). Kodein allows you to create a Kodein instance that lives only inside one of your components:
+在Android，每个component都有它自己的生命周期，很像”mini 应用程序“。你可能需要这些仅在特定组件component及其子组件subcomponents定义的依赖项（例如activity）。Kodein 允许你去创建一个仅在你的组件components存活的Kodein 对象
 
-Example: defining an Activity specific Kodein
+示例：定义一个特定的Activity Kodein
 
 `class MyActivity : Activity(), KodeinAware {
 
@@ -283,33 +280,39 @@ Example: defining an Activity specific Kodein
     }
 
 }`
-①、Creating a sub Kodein container that is valid for this activity and all components of this activity.
+①、创建一个对此activity 和 此activity的所有组件有效的 子 Kodein容器
 
-> You can define the way the parent kodein is extended by defining the copy mode:
-> Example: defining an Activity specific Kodein that copies all parent bindings
-> `override val kodein by subKodein(kodein(), copy = Copy.All) {
+> 您可以通过定义复制模式来定义父kodein的扩展方式、
+
+
+示例：定义一个复制所有父类Binding依赖项的特定activity kodein
+```
+override val kodein by subKodein(kodein(), copy = Copy.All) {
     /* component specific bindings */
-}`
+}
+```
 
 #### <h2 id="6.3">3. Activity retained sub Kodein</h2>
-Kodein-Android provides retainedSubKodein for Activities. It creates a Kodein object that is immune to activity restarts.
-> 	This means that you should never access the containing activity it may have been restarted and not valid anymore!
-Example: defining an Activity specific Kodein
+Kodein-Android 为Activities提供了retainedSubKodein。它创建了一个不受activity重启影响的Kodein对象
+> 这意味着您永远不应该访问可能已重新启动且不再有效的activity容器，如果只是使用subKodein的话！
 
-`class MyActivity : Activity(), KodeinAware {
+
+```class MyActivity : Activity(), KodeinAware {
 
     override val kodein: Kodein by retainedSubKodein(kodein()) { 
         /* activity specific bindings */
     }
 
-}`
-① 	Using retainedSubKodein instead of subKodein ensures that the Kodein object is retained and not recreated between activity restarts.
+}```
 
-Example: defining an Activity specific Kodein
+① 用retainedSubKodein来代替subKodein可确保保留Kodein对象 ，而不会在activity重启的时候创建它
+
+比如：定义一个特定Activity的Kodein
 
 > You can define the way the parent kodein is extended by defining the copy mode:
 > Example: defining an Activity specific Kodein that copies all parent bindings
-> `override val kodein by retainedSubKodein(kodein(), copy = Copy.All) {
+ 
+`override val kodein by retainedSubKodein(kodein(), copy = Copy.All) {
     /* component specific bindings */
 }`
 
