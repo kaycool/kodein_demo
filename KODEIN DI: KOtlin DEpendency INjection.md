@@ -1,7 +1,6 @@
-# KODEIN DI: KOtlin DEpendency INjection
-
 [原英文文档地址](https://kodein.org/Kodein-DI/index.html?latest/core)
 
+# KODEIN DI: KOtlin DEpendency INjection
 
 * [一.introduction](#1)
    * [Description](#1.1)
