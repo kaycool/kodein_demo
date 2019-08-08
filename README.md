@@ -4,3 +4,6 @@
 
 1. [KODEIN DI: KOtlin DEpendency INjection 个人版本](https://github.com/kaycool/kodein_demo/blob/master/KODEIN%20DI:%20KOtlin%20DEpendency%20INjection.md)
 2. [Kodein DI on Android 个人版本](https://github.com/kaycool/kodein_demo/blob/master/Kodein%20DI%20on%20Android.md)
+
+
+正在持续完善过程中
