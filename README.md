@@ -273,13 +273,15 @@ kodein 函数将总是返回最近父层kodein，例如：在一个View或者Fra
 
 示例：定义一个特定的Activity Kodein
 
-`class MyActivity : Activity(), KodeinAware {
+```
+class MyActivity : Activity(), KodeinAware {
 
     override val kodein by subKodein(kodein()) { 
         /* activity specific bindings */
     }
 
-}`
+}
+```
 ①、创建一个对此activity 和 此activity的所有组件有效的 子 Kodein容器
 
 > 您可以通过定义复制模式来定义父kodein的扩展方式、
@@ -297,70 +299,84 @@ Kodein-Android 为Activities提供了retainedSubKodein。它创建了一个不�
 > 这意味着您永远不应该访问可能已重新启动且不再有效的activity容器，如果只是使用subKodein的话！
 
 
-```class MyActivity : Activity(), KodeinAware {
+```
+class MyActivity : Activity(), KodeinAware {
 
     override val kodein: Kodein by retainedSubKodein(kodein()) { 
         /* activity specific bindings */
     }
 
-}```
+}
+```
 
 ① 用retainedSubKodein来代替subKodein可确保保留Kodein对象 ，而不会在activity重启的时候创建它
 
 比如：定义一个特定Activity的Kodein
 
-> You can define the way the parent kodein is extended by defining the copy mode:
-> Example: defining an Activity specific Kodein that copies all parent bindings
+> 您可以通过定义复制模式来定义父kodein的扩展方式、
+
+示例：定义一个复制所有父类Binding依赖项的特定activity kodein
  
-`override val kodein by retainedSubKodein(kodein(), copy = Copy.All) {
+```
+override val kodein by retainedSubKodein(kodein(), copy = Copy.All) {
     /* component specific bindings */
-}`
+}
+```
 
 ###  <h2 id="7">七.Independant Activity retained Kodein</h2>
-Kodein provides the retainedKodein function that creates a Kodein instance that is independendant from the parent.
-> This means that all bindings in the application context are NOT available through this new Kodein.
-Example: defining an independant Kodein Container.
+Kodein提供retainedKodein函数创建一个不依赖于父容器的 Kodein对象
+> 这意味着在application context父容器中绑定的所有依赖项在这个新的Kodein对象里是不适用的，你无法通过它获取到父容器中的任何依赖项
 
-`class MyActivity : Activity() {
+示例：定义一个不依赖Kodein 父容器的Kodein对象
+
+```
+class MyActivity : Activity() {
 
     val activityKodein: Kodein by retainedKodein { 
         /* activity specific bindings */
     }
 
-}`
-
+}
+```
 
 
 ###  <h2 id="8">八.Kodein in Android without the extension</h2>
 #### <h2 id="8.1">1. Being KodeinAware</h2>
-It is quite easy to have your Android components being KodeinAware (provided that your Application class is KodeinAware).
+让您的Android组件成为KodeinAware非常容易(假设你的Application类是KodeinAware)
 ##### <h2 id="8.1.1">1. Using lazy</h2>
-Example: a KodeinAware Activity
+示例：KodeinAware Activity
 
-`class MyActivity : Activity(), KodeinAware {
+```
+class MyActivity : Activity(), KodeinAware {
     override val kodein: Kodein by lazy { (applicationContext as KodeinAware).kodein }
-}`
+}
+```
 
 ##### <h2 id="8.1.2">2. Using lateinit</h2>
-Example: a KodeinAware Activity
+示例：KodeinAware Activity
 
-`class MyActivity : Activity(), KodeinAware {
+```
+class MyActivity : Activity(), KodeinAware {
     override lateinit var kodein: Kodein
     override fun onCreate(savedInstanceState: Bundle?) {
         kodein = (applicationContext as KodeinAware).kodein
     }
-}`
+}
+```
 
 #### <h2 id="8.2">2. Using LateInitKodein</h2>
-If you don’t want the component classes to be KodeinAware, you can use a LateInitKodein:
-Example: an Activity with LateInitKodein
+如果你不想你的组件component类成为KodeinAware，你可以使用LateInitKodein
+If you don’t want the component classes to be KodeinAware, you can use a LateInitKodein;
+示例: 一个LateInitKodein的Activity
 
-`class MyActivity : Activity() {
+```
+class MyActivity : Activity() {
     val kodein = LateInitKodein()
     override fun onCreate(savedInstanceState: Bundle?) {
         kodein.baseKodein = (applicationContext as KodeinAware).kodein
     }
-}`
+}
+```
 
 #### <h2 id="8.3">3. Being Kodein independant</h2>
 If you want your components to be Kodein-independent, you can use the dependency holder pattern:
