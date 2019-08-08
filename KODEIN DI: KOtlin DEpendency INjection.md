@@ -3,7 +3,7 @@
 [原英文文档地址](https://kodein.org/Kodein-DI/index.html?latest/core)
 
 
-* [一.ntroduction](#1)
+* [一.introduction](#1)
    * [Description](#1.1)
    * [Example](#1.2)
 
@@ -78,10 +78,79 @@
 
 
 
+###  <h2 id="1">一.introduction</h2>
+#### <h2 id="1.1">1.1. Description</h2>
+#### <h2 id="1.2">1.2. Example</h2>
+
+###  <h2 id="2">二.Platform compatibility & Genericity</h2>
+
+
+###  <h2 id="3">三.Install</h2>
+#### <h2 id="3.1">3.1. JVM</h2>
+#### <h2 id="3.2">3.2. JavaScript (Gradle)</h2>
+#### <h2 id="3.3">3.3. Native (Gradle)</h2>
+
+
+###  <h2 id="4">四.Bindings: Declaring dependencies</h2>
+#### <h2 id="4.1">4.1. Tagged bindings</h2>
+#### <h2 id="4.2">4.2. Provider binding</h2>
+#### <h2 id="4.3">4.3. Singleton binding</h2>
+#### <h2 id="4.4">4.4. Factory binding</h2>
+#### <h2 id="4.5">4.5. Multiton binding</h2>
+#### <h2 id="4.6">4.6. Referenced singleton or multiton binding</h2>
+#### <h2 id="4.7">4.7. Instance binding</h2>
+#### <h2 id="4.8">4.8. Direct binding</h2>
+#### <h2 id="4.9">4.9. Subtypes bindings</h2>
+#### <h2 id="4.10">4.10. Transitive dependencies</h2>
+#### <h2 id="4.11">4.11. Being responsible for its own retrieval</h2>
 
 
 
+###  <h2 id="5">五.Bindings separation</h2>
+#### <h2 id="5.1">5.1. Modules</h2>
+#### <h2 id="5.2">5.2. Extension (composition) (Gradle)</h2>
+#### <h2 id="5.3">5.3. Overriding</h2>
+#### <h2 id="5.4">5.4. Overridden access from parent</h2>
 
+
+###  <h2 id="6">六.Dependency injection & retrieval</h2>
+#### <h2 id="6.1">6.1. Retrieval rules</h2>
+#### <h2 id="6.2">6.2. Injection & Retrieval</h2>
+#### <h2 id="6.3">6.3. Injection</h2>
+#### <h2 id="6.4">6.4. Retrieval: the Kodein container</h2>
+#### <h2 id="6.5">6.5. Retrieval: being KodeinAware</h2>
+#### <h2 id="6.6">6.6. Retrieval: Direct</h2>
+#### <h2 id="6.7">6.7. Error messages</h2>
+
+###  <h2 id="7">七.Using the environment</h2>
+#### <h2 id="7.1">7.1. Context</h2>
+#### <h2 id="7.2">7.2. Scope</h2>
+#### <h2 id="7.3">7.3. Scope creation</h2>
+
+###  <h2 id="8">八.Multi-binding</h2>
+#### <h2 id="8.1">8.1. In a Set</h2>
+#### <h2 id="8.2">8.2. In a map</h2>
+#### <h2 id="8.3">8.3. Print bindings</h2>
+#### <h2 id="8.4">8.4. Recursive dependency loop</h2>
+
+###  <h2 id="9">九.OnReady callbacks</h2>
+
+###  <h2 id="10">10.External Source</h2>
+
+###  <h2 id="11">11.Erased version pitfalls</h2>
+#### <h2 id="11.1">11.1. The type erasure problem</h2>
+#### <h2 id="11.2">11.2. Using generic and erased function forms</h2>
+#### <h2 id="11.3">11.3. Erased parameterized generic typess</h2>
+
+###  <h2 id="12">12.Bind the same type to different factories</h2>
+
+###  <h2 id="13">13.Hack the container</h2>
+#### <h2 id="13.1">13.1. Tag vs context vs argument</h2>
+#### <h2 id="13.2">13.2. Explore bindings</h2>
+
+###  <h2 id="14">14.Community</h2>
+#### <h2 id="14.1">14.1. Contribute</h2>
+#### <h2 id="14.2">14.2. Let’s talk!</h2>
 
 
 正在准备中...
