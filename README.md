@@ -64,7 +64,8 @@ Example: an Android Application class that implements KodeinAware
           }
         }
         使用Kodein.lazy可以在绑定时访问Context`
-        > 不要忘记在minifest当中声明MyApp
+> 不要忘记在minifest当中声明MyApp
+
 3.在Activities，Fragments 和其它context实现KodeinAware接口 android类中，使用kodein方法取回这些声明的Kodein对象
 
 4. 检索您的依赖项!
@@ -85,7 +86,9 @@ Example: an Android Application class that implements KodeinAware
 
 `class MyActivity : Activity(), KodeinAware {
     override val kodein by kodein() 
+    
     val ds: DataSource by instance()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ds.connect() 
@@ -102,21 +105,23 @@ Example: an Android Application class that implements KodeinAware
 如果你想在onCreate的时候就检索这些依赖对象，使用trigger可以很方便的实现它。
 示例：在实现KodeinAware的Android Activity中使用trigger
 
-`class MyActivity : Activity(), KodeinAware {
 
-    override val kodein by kodein()
+	`class MyActivity : Activity(), KodeinAware {
 
-    override val kodeinTrigger = KodeinTrigger() 
+	    override val kodein by kodein()
 
-    val ds: DataSource by instance()
+	    override val kodeinTrigger = KodeinTrigger() 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        kodeinTrigger.trigger() 
-        /* ... */
-    }
+	    val ds: DataSource by instance()
 
-}`
+	    override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		kodeinTrigger.trigger() 
+		/* ... */
+	    }
+
+	}`
+
 
 ①、KodeinTrigger()->只需要创建trigger,Kodein就会自动使用它 
 ②、kodeinTrigger.trigger()->此时将检索kodein和所有依赖项。
@@ -133,12 +138,14 @@ Kodein，你需要Android context，为此，View Models需要实现AndroidViewM
 >如果您希望View Models与Kodein无关，你可以使用View Model Factory.
 示例：在实现KodeinAware的Android Activity中使用trigger
 
-`class MyViewModel(app: Application) : ApplicationViewModel(app), KodeinAware {
+	`class MyViewModel(app: Application) : ApplicationViewModel(app), KodeinAware {
 
-    override val kodein by kodein() 
+	    override val kodein by kodein() 
 
-    val repository : Repository by instance()
-}`
+	    val repository : Repository by instance()
+	}`
+
+
 ①、kodein()->检索应用程序的Kodein容器
 
 ###  <h2 id="3">三.Android module</h2>
@@ -146,22 +153,22 @@ Kodein，你需要Android context，为此，View Models需要实现AndroidViewM
 Kodein-Android提出了一个module，可以轻松检索许多标准的Android服务
 >这个module绝对是可选的，你可以选择自由使用它或者保留它。
 
-`class MyApplication : Application(), KodeinAware {
-    override val kodein by Kodein.lazy {
-        import(androidXModule(this@MyApplication)) 
-	    /* bindings */
-    }
-}`
+	`class MyApplication : Application(), KodeinAware {
+	    override val kodein by Kodein.lazy {
+		import(androidXModule(this@MyApplication)) 
+		    /* bindings */
+	    }
+	}`
 
 ① 可以是androidXModule或androidSupportModule或androidCoreModule
 
 您可以在Kodein-Android [module.kt](https://github.com/Kodein-Framework/Kodein-DI/blob/6.3/framework/android/kodein-di-framework-android-core/src/main/java/org/kodein/di/android/module.kt)文件中看到此module提供的所有内容
 示例: 使用kodein获取LayoutInflater
 
-`class MyActivity : Activity(), KodeinAware {
-    override val kodein by kodein()
-    val inflater: LayoutInflater by instance() 
-}`
+	`class MyActivity : Activity(), KodeinAware {
+	    override val kodein by kodein()
+	    val inflater: LayoutInflater by instance() 
+	}`
 
 如果你是非Android 类中获取这些类，你需要确定一个Android Context 作为 Kodein context：
 示例：使用带有 context 的 kodein 去获取 LayoutInflater
@@ -172,14 +179,14 @@ or
 
 示例：使用带有类context的kodein来获取LayoutInflater
 
-`class MyUtility(androidContext: Context) : KodeinAware {
+	`class MyUtility(androidContext: Context) : KodeinAware {
 
-    override val kodein by androidContext.kodein()
+	    override val kodein by androidContext.kodein()
 
-    override val kodeinContext = kcontext(androidContext) 
+	    override val kodeinContext = kcontext(androidContext) 
 
-    val inflater: LayoutInflater by instance()
-}`
+	    val inflater: LayoutInflater by instance()
+	}`
 
 ① 定义一个默认的context：用于获取Android系统服务的Android context
 
@@ -191,12 +198,13 @@ The android module provides a number of context translators. For example, they a
 However, if you don’t want to use the android modules, but still need these translators, you can register them easily:
 Example: importing the android module
 
-`class MyApplication : Application(), KodeinAware {
-    override val kodein by Kodein.lazy {
-        import(androidXContextTranslators) 
-	    /* bindings */
-    }
-}`
+	`class MyApplication : Application(), KodeinAware {
+	    override val kodein by Kodein.lazy {
+		import(androidXContextTranslators) 
+		    /* bindings */
+	    }
+	}`
+	
 ①	Can either be androidXContextTranslators or androidSupportContextTranslators or androidCoreContextTranslators.
 
 
