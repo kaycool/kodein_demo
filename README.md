@@ -103,11 +103,11 @@ class MyActivity : Activity(), KodeinAware {
 ```
 
 ① 通过上下文检索一个应用的 Kodein 对象<br>
-② 因为Kodein所有的过程都是延迟加载，kodein 和 DataSource 对象都是仅在被需要的时候才开始检索
+② 因为Kodein所有的过程都是延迟加载，kodein 和 DataSource 对象都是仅在被需要的时候才开始加载
 
 
 #### <h2 id="2.3">3. 使用Trigger</h2>
-如果你想在onCreate的时候就检索这些依赖对象，使用trigger可以很方便的实现它。
+如果你想在onCreate的时候就加载这些依赖对象，使用trigger可以很方便的实现它。
 示例：在实现KodeinAware的Android Activity中使用trigger
 
 ```
@@ -129,9 +129,9 @@ class MyActivity : Activity(), KodeinAware {
 ```
 
 ①、KodeinTrigger()->只需要创建trigger,Kodein就会自动使用它 
-②、kodeinTrigger.trigger()->此时将检索kodein和所有依赖项。
+②、kodeinTrigger.trigger()->此时将加载kodein和所有依赖项的对象。
 
-> 使用这种方式对应用来说是一种非常重要的提升：因为所有的依赖项都将在onCreate方法中被检索，你可以确保在编译时已正确检索kodein所有依赖项，意味着没有kodein非声明的依赖。
+> 使用这种方式对应用来说是一种非常重要的提升：因为所有的依赖项都将在onCreate方法中被加载，你可以确保在编译时已正确加载kodein所有依赖项，意味着程序中不会出现kodein非声明的依赖对象。
 如果你仅仅使用 instance（no provider or factory），你同样可以确保没有依赖循环
 
 #### <h2 id="2.4">4. View Models</h2>
@@ -152,11 +152,11 @@ class MyViewModel(app: Application) : ApplicationViewModel(app), KodeinAware {
 }
 ```
 
-①、kodein()->检索应用程序的Kodein容器
+①、kodein()->加载应用程序的Kodein容器
 
 ###  <h2 id="3">三.Android module</h2>
 
-Kodein-Android提出了一个module，可以轻松检索许多标准的Android服务
+Kodein-Android提出了一个module，可以轻松加载许多标准的Android服务
 >这个module绝对是可选的，你可以选择自由使用它或者保留它。
 
 ```
@@ -199,70 +199,79 @@ class MyUtility(androidContext: Context) : KodeinAware {
 }
 ```
 
-① 定义一个默认的context：用于获取Android系统服务的Android context
+① 定义一个默认的context：用于获取Kodein定义的标准Android系统服务的Android context
 
 
 ###  <h2 id="4">四.Android context translators</h2>
-
-The android module provides a number of context translators. For example, they allow you to retrieve an activity scoped singleton inside a fragment, without manually specifying the activity.
-> The android modules automatically register these translators.
-However, if you don’t want to use the android modules, but still need these translators, you can register them easily:
-Example: importing the android module
-
-	`class MyApplication : Application(), KodeinAware {
-	    override val kodein by Kodein.lazy {
-		import(androidXContextTranslators) 
-		    /* bindings */
-	    }
-	}`
+module provides 提供许多context 翻译器。例如,它容许在fragment内部获取一个activity作用域内的单例，无序手动指定这个activity
+> android modules 自动注册了这些翻译器
+然而，如果你不想使用kodein定义的android modules依赖库，但是又需要这些translators，你可以很简单的注册它们：
+示例：引入android module依赖库
+```
+class MyApplication : Application(), KodeinAware {
+    override val kodein by Kodein.lazy {
+        import(androidXContextTranslators) 
+	    /* bindings */
+    }
+}
+```
 	
-①	Can either be androidXContextTranslators or androidSupportContextTranslators or androidCoreContextTranslators.
-
+①可以是androidXContextTranslators或androidSupportContextTranslators或androidCoreContextTranslators
 
 ###  <h2 id="5">五.Android scopes</h2>
 #### <h2 id="5.1">1. Component scopes</h2>
-Kodein provides a standard scope for any component (Android or not). The WeakContextScope will keep singleton and multiton instances as long as the context (= component) lives.
+Kodein 为所有的component(Android or not)提供标准的作用域. 只要 context (= component)存在，WeakContextScope 将保留singleton 和 multiton 
+
+示例：使用 Activity 作用域
 
 Example: using an Activity scope
 
-`val kodein = Kodein {
+```
+val kodein = Kodein {
     bind<Controller>() with scoped(WeakContextScope.of<Activity>()).singleton { ControllerImpl(context) } 
-}`
+}
+```
 
-①	context is of type Activity because we are using the WeakContextScope.of<Activity>().
-> WeakContextScope is NOT compatible with ScopeCloseable.
+① context的类型为Activity，因为我们使用的是WeakContextScope.of<Activity>(). 
+> WeakContextScope与ScopeCloseable不兼容
   
 #### <h2 id="5.2">2. Activity retained scope</h2>
-Kodein-Android provides the ActivityRetainedScope, which is a scope that allows activity-scoped singletons or multitons that are independent from the activity restart.
-This means that for the same activity, you’ll get the same instance, even if the activity restarts.
-> This means that you should never retain the activity passed at creation because it may have been restarted and not valid anymore!
+
+Kodein-Android 提供ActivityRetainedScope，它允许 activity-scoped 内的 singletons或者multitons 不受activity restart影响
+这就意味着，对于相同的activity，你将获得相同的instance，即使这个activity重启
+>这也就意味着你不必保留在创建时传递的activity，因为它可能已经启动并且不在有效
 
 `val kodein = Kodein {
     bind<Controller>() with scoped(ActivityRetainedScope).singleton { ControllerImpl() }
 }`
 
->This scope IS compatible with ScopeCloseable: see documentation.
+>ActivityRetainedScope与ScopeCloseable不兼容： see documentation.
 
 #### <h2 id="5.3">3. Lifecycle scope</h2>
-Kodein-Android provides the AndroidLifecycleScope, which is a scope that allows activity-scoped singletons or multitons that are bound to a component lifecycle. It uses Android support Lifecycle, so you need to use Android support’s LifecycleOwner components.
-Example: using an Activity retained scope
 
-`val kodein = Kodein {
+Kodein-Android提供 AndroidLifecycleScope，它允许 activity作用域内的 singletons 或者 multitons 绑定到component的生命周期上。它使用Android support Lifecycle，所以你需要依赖Android support’s LifecycleOwner components
+
+示例：使用一个AndroidLifecycleScope
+
+```
+val kodein = Kodein {
     bind<Controller>() with scoped(AndroidLifecycleScope<Fragment>()).singleton { ControllerImpl(context) }
-}`
+}
+```
 
-① These lifecycles are NOT immune to activity restart due to configuration change.
-② This scope IS compatible with ScopeCloseable: see documentation.
+① 由于配置更改，这些生命周期不会对activity重启产生影响
+② AndroidLifecycleScope与ScopeCloseable不兼容： see documentation.
 
 ###  <h2 id="6">六.Layered dependencies</h2>
 #### <h2 id="6.1">1. The closest Kodein pattern</h2>
-Android components can be thought as layers. For example, a View defines a layer, on top of an Activity layer, itself on top of the Application layer.
+Android components 可以被视作 图层。例如，一个view在Activity 图层定义了一个图层，它本身位于Application图层的顶部
 
-The kodein function will always return the kodein of the closest parent layer. In a View or a Fragment, for example, it will return the containing Activity’s Kodein, if it defines one, else it will return the "global" Application Kodein.
+kodein 函数将总是返回最近父层kodein，例如：在一个View或者Fragment当中，它将返回容器Activity 的Kodein，如果这个activity定义了的话，否则它将返回“全局的”Application 层级的Kodein
 
-In the following code example, if MyActivity contains Fragments, and that these fragments get their Kodein object via kodein(), they will receive the MyActivity Kodein object, instead of the Application one.
+在一下代码示例中，MyActivity 包含 Fragments，并且这些fragments通过kodein()获取它们的Kodein 对象，它将获得MyActivity Kodein对象，而不是Application的Kodein对象
 
 #### <h2 id="6.2">2. Component based sub Kodein</h2>
+在Android，每个component
 In Android, each component has its own lifecycle, much like a "mini application". You may need to have dependencies that are defined only inside a specific component and its subcomponents (such as an activity). Kodein allows you to create a Kodein instance that lives only inside one of your components:
 
 Example: defining an Activity specific Kodein
