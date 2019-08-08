@@ -379,10 +379,11 @@ class MyActivity : Activity() {
 ```
 
 #### <h2 id="8.3">3. Being Kodein independant</h2>
-If you want your components to be Kodein-independent, you can use the dependency holder pattern:
+如果您希望组件与Kodein无关，则可以使用依赖关系持有者模式
 ##### <h2 id="8.3.1">1. The dependency holder pattern</h2>
 
-`class MyActivity : Activity() {
+```
+class MyActivity : Activity() {
 
     class Deps(
             val ds: DataSource,
@@ -415,16 +416,21 @@ class KodeinCreator : MyApplication.Creator {
     }.direct
 
     override fun myActivity() = kodein.newInstance { MyActivity.Deps(instance(), instance()) }
-}`
+}
+```
 
 ##### <h2 id="8.3.2">2. View Model Factory</h2>
-If you want your view models to be independant from Kodein, then you need to inject them (meaning passing their dependencies by constructor). To do that, you need to create your own ViewModelProvider.Factory.
-Here is a simple one:
+如果您希望 view models与Kodein无关,那么您需要注入他们(意味着通过构造函数传递他们)。为此，您需要创建自己的ViewModelProvider.Factory。
+
+
+这是一个简单的：
 A Kodein View Model Factory
 
-`class KodeinViewModelFactory(val kodein: Kodein) : ViewModelProvider.Factory {
+```
+class KodeinViewModelFactory(val kodein: Kodein) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
             kodein.direct.Instance(TT(modelClass))
-}`
+}
+```
 
 
