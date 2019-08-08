@@ -99,8 +99,8 @@ Example: an Android Application class that implements KodeinAware
 
 
 #### <h2 id="2.3">3. 使用Trigger</h2>
-If you want all dependencies to be retrieved at onCreate, you can very easily use a trigger:
-Example: using an trigger in a KodeinAware Android Activity
+如果你想在onCreate的时候就检索这些依赖对象，使用trigger可以很方便的实现它。
+示例：在实现KodeinAware的Android Activity中使用trigger
 
 `class MyActivity : Activity(), KodeinAware {
 
@@ -118,19 +118,20 @@ Example: using an trigger in a KodeinAware Android Activity
 
 }`
 
-①、	Just create a trigger, and Kodein will automatically use it.
-②、	The kodein AND all dependencies will both be retrieved at that time.
+①、KodeinTrigger()->只需要创建trigger,Kodein就会自动使用它 
+②、kodeinTrigger.trigger()->此时将检索kodein和所有依赖项。
 
->Using this approach has an important advantage: as all dependencies are retrieved in onCreate, you can be sure that all your dependencies have correctly been retrieved, meaning that there were no non-declared dependency.
-If you only use instance (no provider or factory), you can also be sure that there were no dependency loop.
+> 使用这种方式对应用来说是一种非常重要的提升：因为所有的依赖项都将在onCreate方法中被检索，你可以确保在编译时已正确检索kodein所有依赖项，意味着没有kodein非声明的依赖。
+如果你仅仅使用 instance（no provider or factory），你同样可以确保没有依赖循环
 
 #### <h2 id="2.4">4. View Models</h2>
-To use Kodein, you need an Android context. For that, View Models need to implement AndroidViewModel.
+Kodein，你需要Android context，为此，View Models需要实现AndroidViewModel
 
-It is very easy to use Kodein inside View Models:
 
->If you prefer your View Models to be independant from Kodein, you can use a View Model Factory.
-Example: using an trigger in a KodeinAware Android Activity
+在View Models中使用Kodein非常容易:
+
+>如果您希望View Models与Kodein无关，你可以使用View Model Factory.
+示例：在实现KodeinAware的Android Activity中使用trigger
 
 `class MyViewModel(app: Application) : ApplicationViewModel(app), KodeinAware {
 
@@ -138,12 +139,12 @@ Example: using an trigger in a KodeinAware Android Activity
 
     val repository : Repository by instance()
 }`
-①、	Retrieving the application’s Kodein container.
+①、kodein()->检索应用程序的Kodein容器
 
 ###  <h2 id="3">三.Android module</h2>
-To use Kodein, you need an Android context. For that, View Models need to implement AndroidViewModel.
-> This module is absolutely optional, you are free to use it or leave it ;).
-Example: importing the android module
+
+Kodein-Android提出了一个module，可以轻松检索许多标准的Android服务
+>这个module绝对是可选的，你可以选择自由使用它或者保留它。
 
 `class MyApplication : Application(), KodeinAware {
     override val kodein by Kodein.lazy {
@@ -152,10 +153,10 @@ Example: importing the android module
     }
 }`
 
-① Can either be androidXModule or androidSupportModule or androidCoreModule.
+① 可以是androidXModule或androidSupportModule或androidCoreModule
 
-You can see everything that this module proposes in the Kodein-Android module.kt file.
-Example: using kodein to retrieve a LayoutInflater
+您可以在Kodein-Android [module.kt](https://github.com/Kodein-Framework/Kodein-DI/blob/6.3/framework/android/kodein-di-framework-android-core/src/main/java/org/kodein/di/android/module.kt)文件中看到此module提供的所有内容
+示例: 使用kodein恢复LayoutInflater
 
 `class MyActivity : Activity(), KodeinAware {
     override val kodein by kodein()
