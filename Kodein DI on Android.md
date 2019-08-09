@@ -74,7 +74,7 @@ class MyApp : Application(), KodeinAware {
 
 3.在Activities，Fragments 和其它context实现KodeinAware接口 android类中，使用kodein方法取回这些声明的Kodein对象
 
-4. 检索您的依赖项!
+4. 获取您绑定的依赖项!
 
 
 ###  <h2 id="2">二.Retrieving</h2>
