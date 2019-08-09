@@ -72,7 +72,7 @@ class MyApp : Application(), KodeinAware {
        
 > 不要忘记在minifest当中声明MyApp
 
-3.在Activities，Fragments 和其它context实现KodeinAware接口 android类中，使用kodein方法取回这些声明的Kodein对象
+3. 在Activities，Fragments 和其它context实现KodeinAware接口 android类中，使用kodein方法取回这些声明的Kodein对象
 
 4. 获取您绑定的依赖项!
 
