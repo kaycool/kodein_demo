@@ -74,7 +74,7 @@ class MyApp : Application(), KodeinAware {
 
 3. 在Activities，Fragments 和其它context实现KodeinAware接口 android类中，使用kodein方法取回这些声明的Kodein对象
 
-4. 获取您绑定的依赖项!
+4. 检索您绑定的依赖项!
 
 
 ###  <h2 id="2">二.Retrieving</h2>
@@ -106,11 +106,11 @@ class MyActivity : Activity(), KodeinAware {
 ```
 
 ① 通过上下文检索一个应用的 Kodein 对象<br>
-② 因为Kodein所有的过程都是延迟加载，kodein 和 DataSource 对象都是仅在被需要的时候才开始加载
+② 因为Kodein所有的过程都是延迟加载，kodein 和 DataSource 对象都是仅在被需要的时候才开始检索
 
 
 #### <h2 id="2.3">3. 使用Trigger</h2>
-如果你想在onCreate的时候就加载这些依赖对象，使用trigger可以很方便的实现它。
+如果你想在onCreate的时候就检索这些依赖对象，使用trigger可以很方便的实现它。
 示例：在实现KodeinAware的Android Activity中使用trigger
 
 ```
@@ -132,9 +132,9 @@ class MyActivity : Activity(), KodeinAware {
 ```
 
 ①、KodeinTrigger()->只需要创建trigger,Kodein就会自动使用它 
-②、kodeinTrigger.trigger()->此时将加载kodein和所有依赖项的对象。
+②、kodeinTrigger.trigger()->此时将检索kodein和所有依赖项的对象。
 
-> 使用这种方式对应用来说是一种非常重要的提升：因为所有的依赖项都将在onCreate方法中被加载，你可以确保在编译时已正确加载kodein所有依赖项，意味着程序中不会出现kodein非声明的依赖对象。
+> 使用这种方式对应用来说是一种非常重要的提升：因为所有的依赖项都将在onCreate方法中被检索，你可以确保在编译时已正确检索kodein所有依赖项，意味着程序中不会出现kodein非声明的依赖对象。
 如果你仅仅使用 instance（no provider or factory），你同样可以确保没有依赖循环
 
 #### <h2 id="2.4">4. View Models</h2>
@@ -155,11 +155,11 @@ class MyViewModel(app: Application) : ApplicationViewModel(app), KodeinAware {
 }
 ```
 
-①、kodein()->加载应用程序的Kodein容器
+①、kodein()->检索应用程序的Kodein容器
 
 ###  <h2 id="3">三.Android module</h2>
 
-Kodein-Android提出了一个module，可以轻松加载许多标准的Android服务
+Kodein-Android提出了一个module，可以轻松检索许多标准的Android服务
 >这个module绝对是可选的，你可以选择自由使用它或者保留它。
 
 ```
@@ -174,7 +174,7 @@ class MyApplication : Application(), KodeinAware {
 ① 可以是androidXModule或androidSupportModule或androidCoreModule
 
 您可以在Kodein-Android [module.kt](https://github.com/Kodein-Framework/Kodein-DI/blob/6.3/framework/android/kodein-di-framework-android-core/src/main/java/org/kodein/di/android/module.kt)文件中看到此module提供的所有内容
-示例: 使用kodein获取LayoutInflater
+示例: 使用kodein检索LayoutInflater
 ```
 class MyActivity : Activity(), KodeinAware {
     override val kodein by kodein()
@@ -182,14 +182,14 @@ class MyActivity : Activity(), KodeinAware {
 }
 ```
 
-如果你是非Android 类中获取这些类，你需要确定一个Android Context 作为 Kodein context：
-示例：使用带有 context 的 kodein 去获取 LayoutInflater
+如果你是非Android 类中检索这些类，你需要确定一个Android Context 作为 Kodein context：
+示例：使用带有 context 的 kodein 去检索 LayoutInflater
 
 ```val inflater: LayoutInflater by kodein.on(getActivity()).instance()```
 
 or
 
-示例：使用带有类context的kodein来获取LayoutInflater
+示例：使用带有类context的kodein来检索LayoutInflater
 
 ```
 class MyUtility(androidContext: Context) : KodeinAware {
@@ -202,7 +202,7 @@ class MyUtility(androidContext: Context) : KodeinAware {
 }
 ```
 
-① 定义一个默认的context：用于获取Kodein定义的标准Android系统服务的Android context
+① 定义一个默认的context：用于检索Kodein定义的标准Android系统服务的Android context
 
 
 ###  <h2 id="4">四.Android context translators</h2>
