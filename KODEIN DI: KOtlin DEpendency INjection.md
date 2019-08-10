@@ -79,7 +79,23 @@
 
 ###  <h2 id="1">一.introduction</h2>
 #### <h2 id="1.1">1.1. Description</h2>
+Kodein是一个非常有用的依赖注入/检索容器，它非常易于使用和配置。
+Kodein允许你:
+* 延迟初始化你的依赖项在被需要的时候
+* 不用关心依赖项初始化的顺序
+* 轻松绑定类或接口的 instance，provider或者factory
+* 轻松调试依赖项绑定和递归
+Kodein是一个很好的选择因为:
+* 它轻量，快速并且经过优化(广泛使用inline关键字)
+* 它提供了一个非常简单并且可读的声明性DSL风格
+* 它不受类型擦除的影响 (对比 Java)
+* 它与Android完美集成
+* 它提出了kotlin非常惯用风格的API.
+* 它可以被用在java平台
+
+
 #### <h2 id="1.2">1.2. Example</h2>
+
 
 ###  <h2 id="2">二.Platform compatibility & Genericity</h2>
 
