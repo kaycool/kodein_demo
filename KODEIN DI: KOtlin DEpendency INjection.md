@@ -128,10 +128,10 @@ Kodein与Kotlin语言编译的所有平台兼容:JVM兼容（Android),Javascript
 当然，它有点复杂！
 为了能够规避JVM字节码固有的类型擦除，通用版本使用了大量使用反射性的trix。因为擦除版本不使用该trix，所以在Kodein中处理泛型类型要复杂得多
 
-    |   |  Type erasure |Optimized|Non-generic bindings|Generic bindings|
-    |  ----  | ----  | ----  | ----  | ----  |
-    |generic  |immune|no|simple|simple|
-    |erased  |subject|yes|simple|complex|
+|   |  Type erasure |Optimized|Non-generic bindings|Generic bindings|
+|  ----  | ----  | ----  | ----  | ----  |
+|generic  |immune|no|simple|simple|
+|erased  |subject|yes|simple|complex|
 
 ###  <h2 id="3">三.Install</h2>
 #### <h2 id="3.1">3.1. JVM</h2>
