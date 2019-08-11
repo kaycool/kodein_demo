@@ -121,6 +121,13 @@ class Controller(override val kodein: Kodein): KodeinAware {
 
 ###  <h2 id="2">二.Platform compatibility & Genericity</h2>
 
+Kodein与Kotlin语言编译的所有平台兼容:JVM兼容（Android),Javascript和所有Kotlin / Native目标。
+在JVM兼容（Android）上,您需要选择使用已擦除版本或通用版本.
+在Javascript和Native目标上，只有已擦除的版本可用
+区别很简单:通用版本对比擦除版本在IS时不受类型擦除的影响
+当然，它有点复杂！
+为了能够规避JVM字节码固有的类型擦除，通用版本使用了大量使用反射性的trix。因为擦除版本不使用该trix，所以在Kodein中处理泛型类型要复杂得多
+
 
 ###  <h2 id="3">三.Install</h2>
 #### <h2 id="3.1">3.1. JVM</h2>
