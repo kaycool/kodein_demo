@@ -19,7 +19,10 @@
    * [Tagged bindings](#4.1)
    * [Provider binding](#4.2)
    * [Singleton binding](#4.3)
+     * [Non-synced singleton](#4.3.1)
+     * [Eager singleton](#4.3.2)
    * [Factory binding](#4.4)
+      * [Multi-arguments factories](#4.4.1)
    * [Multiton binding](#4.5)
    * [Referenced singleton or multiton binding](#4.6)
    * [Instance binding](#4.7)
@@ -306,11 +309,53 @@ val kodein = Kodein {
 }
 ```
 
-#### <h2 id="4.4">4.4. Non-synced singleton</h2>
+##### <h2 id="4.3.1">4.3.1. 非同步单例</h2>
 
-#### <h2 id="4.4">4.4. Eager singleton</h2>
+根据定义，只能有一个单例实例，这意味着只能构造一个实例。为了达到这个目的，Kodein synchronizes 构造器。这意味着，当请求单个实例并且不可用时，Kodein使用同步互斥锁来确保对同一类型的其他请求将等待构造此实例
 
-#### <h2 id="4.4">4.4. Factory binding</h2>
+虽然这种行为是确保单例正确性的唯一方法，但它也很昂贵（由于互斥锁）并降低了启动性能。
+
+如果你需要提高启动性能，并且您清楚您在做什么，你可以禁用这个同步锁
+
+示例: 创建一个DataSource非同步单例
+```
+val kodein = Kodein {
+    bind<DataSource>() with singleton(sync = false) { SqliteDS.open("path/to/file") }
+}
+```
+使用sync = false意味着:
+* 构造器将没有同步锁。
+* 可能有多个实例构建。
+* 实例将尽可能重用。
+
+##### <h2 id="4.3.2">4.3.2 渴望单例</h2>
+这与常规singleton相同，除了一旦创建Kodein实例并定义了所有绑定，它就会调用提供的函数。
+示例: 创建一个DataSource单例，一旦绑定代码块结束它将被创建
+```
+val kodein = Kodein {
+    // The SQLite connection will be opened as soon as the kodein instance is ready
+    bind<DataSource>() with eagerSingleton { SqliteDS.open("path/to/file") }
+}
+```
+
+#### <h2 id="4.4">4.4 Factory binding</h2>
+This binds a type to a factory function, which is a function that takes an argument of a defined type and that returns an object of the bound type (eg. (A) → T).
+The provided function will be called each time you need an instance of the bound type.
+Example: creates a new Dice each time you need one, according to an Int representing the number of sides
+```
+val kodein = Kodein {
+    bind<Dice>() with factory { sides: Int -> RandomDice(sides) }
+}
+```
+##### <h2 id="4.4.1">4.4.1 Multi-arguments factories</h2>
+A factory can take multiple (up to 5) arguments:
+Example: creates a new Dice each time you need one, according to an Int representing the number of sides
+```
+val kodein = Kodein {
+    bind<Dice>() with factory { startNumber: Int, sides: Int -> RandomDice(sides) }
+}
+```
+
 #### <h2 id="4.5">4.5. Multiton binding</h2>
 #### <h2 id="4.6">4.6. Referenced singleton or multiton binding</h2>
 #### <h2 id="4.7">4.7. Instance binding</h2>
