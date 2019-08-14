@@ -191,7 +191,21 @@ buildscript {
 }
 ```
 
+Then add the dependency:
+
+```
+dependencies {
+    implementation 'org.kodein.di:kodein-di-generic-jvm:6.3.3'
+}
+```
+> 使用 kodein-generic-jvm 或者 kodein-erased-jvm.
 #### <h2 id="3.2">3.2. JavaScript (Gradle)</h2>
+
+
+
+
+
+
 #### <h2 id="3.3">3.3. Native (Gradle)</h2>
 
 
