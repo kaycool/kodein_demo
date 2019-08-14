@@ -181,7 +181,7 @@ Then add the dependency:
 ```
 > 使用 kodein-generic-jvm 或者 kodein-erased-jvm.
 ##### <h2 id="3.1.2">3.1.2 With Gradle</h2>
-Add the JCenter repository:
+在项目层级的build.gradle文件中添加JCenter库:
 
 ```
 buildscript {
@@ -191,7 +191,7 @@ buildscript {
 }
 ```
 
-Then add the dependency:
+之后在项目app层级的build.gradle文件中添加依赖库:
 
 ```
 dependencies {
@@ -200,19 +200,118 @@ dependencies {
 ```
 > 使用 kodein-generic-jvm 或者 kodein-erased-jvm.
 #### <h2 id="3.2">3.2. JavaScript (Gradle)</h2>
+因为Kodein for JavaScript被编译为UMD模块，所以可以导入它：
+* 在浏览器里:
+  * 作为AMD模块（例如使用RequireJS） (请参阅演示项目中的index.html).
+  * 直接在带有<script>标签的HTML页面中使用 (请参阅演示项目中的index2.html).
+* 在NodeJS中，作为常规CJS模块
 
-
-
-
-
+Add the JCenter repository:
+```
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+```
+Then add the dependency:
+```
+dependencies {
+    compile 'org.kodein.di:kodein-di-erased-js:6.3.3'
+}
+```
 
 #### <h2 id="3.3">3.3. Native (Gradle)</h2>
+>Kodein支持以下目标:<br>
+> androidArm32, androidArm64, iosArm32, iosArm64, iosX64, linuxArm32Hfp, linuxMips32, linuxMipsel32, linuxX64, macosX64, 
+> mingwX64
 
-
+Kodein-DI 使用新的gradle原生依赖模型。因为
+Kodein-DI uses the new gradle native dependency model. 因为该模型在gradle中是实验性的，所以它与下一版本的Gradle不向前兼容。
+Add the JCenter repository:
+```
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+```
+Then add the dependency:
+```
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation "org.kodein.di:kodein-di-erased:6.3.3"
+            }
+        }
+    }
+}
+```
 ###  <h2 id="4">四.Bindings: Declaring dependencies</h2>
+示例: Kodein容器的初始化
+```
+val kodein = Kodein {
+	/* Bindings */
+}
+```
+Bindings are declared inside a Kodein initialization block.
+>	If you are using kodein-generic-jvm, Kodein not subject to type erasure (e.g. You can bind both a List<Int> and a List<String>).
+> This is NOT the case when using kodein-erased-jvm, kodein-erased-js or kodein-erased-native. With the erased version by default, binding List<Int> and List<String> actually means binding List<*> twice.
+
+A binding always starts with bind<TYPE>() with. 
+  
+There are different ways to declare bindings:
+
 #### <h2 id="4.1">4.1. Tagged bindings</h2>
+
+All bindings can be tagged to allow you to bind different instances of the same type.
+Example: different Dice bindings
+```
+val kodein = Kodein {
+    bind<Dice>() with ... 
+    bind<Dice>(tag = "DnD10") with ... 
+    bind<Dice>(tag = "DnD20") with ... 
+}
+```
+1. Default binding (with no tag)
+2. Bindings with tags ("DnD10" and "DnD20")
+
+> The tag is of type Any, it does not have to be a String.
+> Whether at define, at injection or at retrieval, tag should always be passed as a named argument.
+> Tag objects must support equality & hashcode comparison. It is therefore recommended to either use primitives (Strings, Ints, etc.) or data classes.
+
+
+
 #### <h2 id="4.2">4.2. Provider binding</h2>
+This binds a type to a provider function, which is a function that takes no arguments and returns an object of the bound type (eg. () → T).
+The provided function will be called each time you need an instance of the bound type.
+
+Example: creates a new 6 sided Dice entry each time you need one
+
+```
+val kodein = Kodein {
+    bind<Dice>() with provider { RandomDice(6) }
+}
+```
+
 #### <h2 id="4.3">4.3. Singleton binding</h2>
+This binds a type to an instance of this type that will lazily be created at first use via a singleton function, which is a function that takes no arguments and returns an object of the bound type (eg. () → T).
+Therefore, the provided function will be called only once: the first time an instance is needed.
+
+Example: creates a DataSource singleton that will be initialized on first access
+```
+val kodein = Kodein {
+    bind<DataSource>() with singleton { SqliteDS.open("path/to/file") }
+}
+```
+
+
+
+#### <h2 id="4.4">4.4. Non-synced singleton</h2>
+
+#### <h2 id="4.4">4.4. Eager singleton</h2>
+
 #### <h2 id="4.4">4.4. Factory binding</h2>
 #### <h2 id="4.5">4.5. Multiton binding</h2>
 #### <h2 id="4.6">4.6. Referenced singleton or multiton binding</h2>
