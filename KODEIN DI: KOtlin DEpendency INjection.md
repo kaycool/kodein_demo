@@ -148,9 +148,9 @@ Kodein与Kotlin语言编译的所有平台兼容:JVM兼容（Android),Javascript
 
 在JVM上，如果符合以下条件，您可能更喜欢擦除版本:
 
-您确信您没有绑定/注入/检索泛型类型，并且您确定没有使用第三方库
+  * 您确信您没有绑定/注入/检索泛型类型，并且您确定没有使用第三方库
 
-您没有使用set绑定。
+  * 您没有使用set绑定。
 
 如果您对代码进行概要分析并发现注入是一个性能缺陷，则可能是实例化：您在关键路径中创建了太多对象。在关键路径中重用对象将增强依赖注入/检索和GC中的性能
 
@@ -160,7 +160,36 @@ Kodein与Kotlin语言编译的所有平台兼容:JVM兼容（Android),Javascript
 ###  <h2 id="3">三.Install</h2>
 #### <h2 id="3.1">3.1. JVM</h2>
 ##### <h2 id="3.1.1">3.1.1 With Maven</h2>
+Add the JCenter repository:
+```
+<repositories>
+    <repository>
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com</url>
+    </repository>
+</repositories>
+```
+Then add the dependency:
+```
+<dependencies>
+    <dependency>
+        <groupId>org.kodein.di</groupId>
+        <artifactId>kodein-di-generic-jvm</artifactId>
+        <version>6.3.3</version>
+    </dependency>
+</dependencies>
+```
+> 使用 kodein-generic-jvm 或者 kodein-erased-jvm.
 ##### <h2 id="3.1.2">3.1.2 With Gradle</h2>
+Add the JCenter repository:
+
+```
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+```
 
 #### <h2 id="3.2">3.2. JavaScript (Gradle)</h2>
 #### <h2 id="3.3">3.3. Native (Gradle)</h2>
