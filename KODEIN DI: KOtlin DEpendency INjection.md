@@ -134,21 +134,17 @@ Kodein与Kotlin语言编译的所有平台兼容:JVM兼容（Android),Javascript
 |erased  |影响|yes|容易|复杂|
 
 
->	
-
-Yes, #perfmatters. However, the humble opinion of the author is that:
-
-There is a balance to be found between performance, readability, security and debuggability.
-
-Optimisation is important in critical path, not everywhere.
-
-Kodein is already pretty optimized ;)
-
-In the vast majority of cases, using the erased version will result in no significant performance change to your application, as IoC happens once and is not a performance pitfall!
-
-Therefore, please make sure that, using the erased version is right for your use case, before blindly using it ;). Do profile your code!
-
-
+>	#性能。但是，作者的拙见如下：
+>
+> * 在性能，可读性，安全性和可调试性之间存在平衡。
+>
+> * 优化在关键路径中非常重要,而不是所有地方
+>
+> * Kodein已经优化的非常好
+>
+> * 在绝大多数情况下，使用擦除版本将导致您的应用程序没有显着的性能变化，因为IoC只发生一次并且不是性能缺陷！
+>
+> 因此，在使用已擦除版本之前，请确保适合您的用例;）。 查看您的代码！
 
 在JVM上，如果符合以下条件，您可能更喜欢擦除版本:
 
