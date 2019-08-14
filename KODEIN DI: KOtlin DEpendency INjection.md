@@ -255,18 +255,18 @@ val kodein = Kodein {
 	/* Bindings */
 }
 ```
-Bindings are declared inside a Kodein initialization block.
->	If you are using kodein-generic-jvm, Kodein not subject to type erasure (e.g. You can bind both a List<Int> and a List<String>).
-> This is NOT the case when using kodein-erased-jvm, kodein-erased-js or kodein-erased-native. With the erased version by default, binding List<Int> and List<String> actually means binding List<*> twice.
+在Kodein初始化块中声明绑定
+> 如果你是用kodein-generic-jvm，Kodein不受类型擦除的影响(例如 您可以绑定List <Int>和List <String>).
+> 当使用kodein-erased-jvm，kodein-erased-js或kodein-erasesed-native时，情况并非如此。 默认情况下，使用已擦除的版本，绑定List <Int>和List <String>实际上意味着绑定List <*>两次
 
-A binding always starts with bind<TYPE>() with. 
-  
-There are different ways to declare bindings:
+一个板顶通常以’bind<具体类型>() with‘开始
+
+声明绑定有不同的方法:
 
 #### <h2 id="4.1">4.1. Tagged bindings</h2>
 
-All bindings can be tagged to allow you to bind different instances of the same type.
-Example: different Dice bindings
+可以标记所有绑定以允许您绑定相同类型的不同实例。
+示例：不同的Dice对象绑定
 ```
 val kodein = Kodein {
     bind<Dice>() with ... 
@@ -274,20 +274,18 @@ val kodein = Kodein {
     bind<Dice>(tag = "DnD20") with ... 
 }
 ```
-1. Default binding (with no tag)
-2. Bindings with tags ("DnD10" and "DnD20")
+1. 默认的Dice对象绑定(无标记)
+2. 通过标记绑定("DnD10" 和 "DnD20")
 
-> The tag is of type Any, it does not have to be a String.
-> Whether at define, at injection or at retrieval, tag should always be passed as a named argument.
-> Tag objects must support equality & hashcode comparison. It is therefore recommended to either use primitives (Strings, Ints, etc.) or data classes.
-
-
+> 标签可以是任意类型，它不必一定要是String.
+> 无论是在定义，注入还是检索时，标记都应始终作为命名参数传递。
+> 标签对象必须支持 相等&哈希值 比较。因此，建议使用基本类型(Strings,Ints,etc.)或者 data 类
 
 #### <h2 id="4.2">4.2. Provider binding</h2>
-This binds a type to a provider function, which is a function that takes no arguments and returns an object of the bound type (eg. () → T).
-The provided function will be called each time you need an instance of the bound type.
+这会将类型绑定到 provider 函数上，该函数不带参数并且返回绑定类型的对象(例如。（）→T)。
+provided 函数会在你每次需要这个绑定类型对象的时候都会被调用。
 
-Example: creates a new 6 sided Dice entry each time you need one
+示例: 每次需要时创建一个新的6面骰子条目
 
 ```
 val kodein = Kodein {
@@ -296,17 +294,17 @@ val kodein = Kodein {
 ```
 
 #### <h2 id="4.3">4.3. Singleton binding</h2>
-This binds a type to an instance of this type that will lazily be created at first use via a singleton function, which is a function that takes no arguments and returns an object of the bound type (eg. () → T).
-Therefore, the provided function will be called only once: the first time an instance is needed.
 
-Example: creates a DataSource singleton that will be initialized on first access
+这种类型绑定到此类型的实例将在第一次通过singleton函数绑定的时候延迟创建，该函数不带参数并且返回绑定类型的对象(例如。（）→T)。
+
+因此，Singleton函数只会被调用一次: 在第一次需要实例的时候
+
+示例: 创建将在首次访问到达初始化的DataSource 单例
 ```
 val kodein = Kodein {
     bind<DataSource>() with singleton { SqliteDS.open("path/to/file") }
 }
 ```
-
-
 
 #### <h2 id="4.4">4.4. Non-synced singleton</h2>
 
