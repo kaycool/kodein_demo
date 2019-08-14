@@ -128,13 +128,44 @@ Kodein与Kotlin语言编译的所有平台兼容:JVM兼容（Android),Javascript
 当然，它有点复杂！
 为了能够规避JVM字节码固有的类型擦除，通用版本使用了大量使用反射性的trix。因为擦除版本不使用该trix，所以在Kodein中处理泛型类型要复杂得多
 
-|   |  Type erasure |Optimized|Non-generic bindings|Generic bindings|
+|   |  类型擦除 |优化|非通用绑定|通用绑定|
 |  ----  | ----  | ----  | ----  | ----  |
-|generic  |immune|no|simple|simple|
-|erased  |subject|yes|simple|complex|
+|generic  |免疫|no|容易|容易|
+|erased  |影响|yes|容易|复杂|
+
+
+>	
+
+Yes, #perfmatters. However, the humble opinion of the author is that:
+
+There is a balance to be found between performance, readability, security and debuggability.
+
+Optimisation is important in critical path, not everywhere.
+
+Kodein is already pretty optimized ;)
+
+In the vast majority of cases, using the erased version will result in no significant performance change to your application, as IoC happens once and is not a performance pitfall!
+
+Therefore, please make sure that, using the erased version is right for your use case, before blindly using it ;). Do profile your code!
+
+
+
+在JVM上，如果符合以下条件，您可能更喜欢擦除版本:
+
+您确信您没有绑定/注入/检索泛型类型，并且您确定没有使用第三方库
+
+您没有使用set绑定。
+
+如果您对代码进行概要分析并发现注入是一个性能缺陷，则可能是实例化：您在关键路径中创建了太多对象。在关键路径中重用对象将增强依赖注入/检索和GC中的性能
+
+如果您使用的是擦除版本，可以选择JVM，也可以默认使用JS＆Native，您应该通读擦除版本的缺陷。
+
 
 ###  <h2 id="3">三.Install</h2>
 #### <h2 id="3.1">3.1. JVM</h2>
+##### <h2 id="3.1.1">3.1.1 With Maven</h2>
+##### <h2 id="3.1.2">3.1.2 With Gradle</h2>
+
 #### <h2 id="3.2">3.2. JavaScript (Gradle)</h2>
 #### <h2 id="3.3">3.3. Native (Gradle)</h2>
 
