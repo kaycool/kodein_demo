@@ -24,6 +24,7 @@
    * [Factory binding](#4.4)
       * [Multi-arguments factories](#4.4.1)
    * [Multiton binding](#4.5)
+      * [non-synced multiton](#4.5.1)
    * [Referenced singleton or multiton binding](#4.6)
    * [Instance binding](#4.7)
    * [Direct binding](#4.8)
@@ -339,17 +340,17 @@ val kodein = Kodein {
 ```
 
 #### <h2 id="4.4">4.4 Factory binding</h2>
-This binds a type to a factory function, which is a function that takes an argument of a defined type and that returns an object of the bound type (eg. (A) → T).
-The provided function will be called each time you need an instance of the bound type.
-Example: creates a new Dice each time you need one, according to an Int representing the number of sides
+这将类型绑定到工厂函数，该工厂函数接受已定义类型的参数并返回绑定类型的对象（例如（A）→T）。
+每当需要绑定类型的实例时，就会调用提供的函数。
+示例: 在每次需要时创建一个新骰子，根据表示边数的整数
 ```
 val kodein = Kodein {
     bind<Dice>() with factory { sides: Int -> RandomDice(sides) }
 }
 ```
 ##### <h2 id="4.4.1">4.4.1 Multi-arguments factories</h2>
-A factory can take multiple (up to 5) arguments:
-Example: creates a new Dice each time you need one, according to an Int representing the number of sides
+工厂可以接受多个（最多5个）参数：
+示例: 在每次需要时创建一个新骰子，根据表示边数的整数
 ```
 val kodein = Kodein {
     bind<Dice>() with factory { startNumber: Int, sides: Int -> RandomDice(sides) }
@@ -357,6 +358,26 @@ val kodein = Kodein {
 ```
 
 #### <h2 id="4.5">4.5. Multiton binding</h2>
+A multiton can be thought of a "singleton factory": it guarantees to always return the same object given the same argument. In other words, for a given argument, the first time a multiton is called with this argument, it will call the function to create an instance; and will always yield that same instance when called with the same argument.
+
+Example: creates one random generator for each value
+```
+val kodein = Kodein {
+    bind<RandomGenerator>() with multiton { max: Int -> SecureRandomGenerator(max) }
+}
+```
+Just like a factory, a multiton can take multiple (up to 5) arguments.
+
+##### <h2 id="4.5.1">4.5.1 non-synced multiton</h2>
+就像单例一样，可以禁用多例同步：
+
+示例: 非同步多态
+```
+val kodein = Kodein {
+    bind<RandomGenerator>(sync = false) with multiton { max: Int -> SecureRandomGenerator(max) }
+}
+```
+
 #### <h2 id="4.6">4.6. Referenced singleton or multiton binding</h2>
 #### <h2 id="4.7">4.7. Instance binding</h2>
 #### <h2 id="4.8">4.8. Direct binding</h2>
