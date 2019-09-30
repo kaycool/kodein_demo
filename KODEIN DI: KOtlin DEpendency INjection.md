@@ -27,10 +27,11 @@
       * [non-synced multiton](#4.5.1)
    * [Referenced singleton or multiton binding](#4.6)
    * [Instance binding](#4.7)
-   * [Direct binding](#4.8)
-   * [Subtypes bindings](#4.9)
-   * [Transitive dependencies](#4.10)
-   * [Being responsible for its own retrieval](#4.11)
+   * [Constant binding](#4.8)
+   * [Direct binding](#4.9)
+   * [Subtypes bindings](#4.10)
+   * [Transitive dependencies](#4.11)
+   * [Being responsible for its own retrieval](#4.12)
    
    
 * [五.Bindings separation](#5)
@@ -379,11 +380,209 @@ val kodein = Kodein {
 ```
 
 #### <h2 id="4.6">4.6. Referenced singleton or multiton binding</h2>
+A referenced singleton is an object that is guaranteed to be single as long as a reference object can return it. A referenced multiton is an object that is guaranteed to be single for the same argument as long as a reference object can return it.
+
+A referenced singleton or multiton needs a "reference maker" in addition to the classic construction function that determines the type of reference that will be used.
+
+Kodein comes with three reference makers for the JVM:
+
+引用的单例是一个对象，只要引用对象可以返回它，它就可以保证是单一的。引用的多态对象是一个对象，只要引用对象可以将其返回，它可以保证对于同一参数是单一的。
+
+引用的单例或多例除了需要确定将要使用的引用类型的经典构造函数之外，还需要“引用创建者”。
+
+Kodein随附三个JVM参考制造者：
+
+JVM: Soft & weak
+
+These are objects that are guaranteed to be single in the JVM at a given time, but not guaranteed to be single during the application lifetime. If there are no more strong references to the instances, they may be GC’d and later, re-created.
+
+Therefore, the provided function may or may not be called multiple times during the application lifetime.
+
+Example: creates a Cache object that will exist only once at a given time
+
+```
+val kodein = Kodein {
+    bind<Map>() with singleton(ref = softReference) { WorldMap() } 
+    bind<Client>() with singleton(ref = weakReference) { id -> clientFromDB(id) } 
+}
+```
+① Because it’s bound by a soft reference, the JVM will GC it before any OutOfMemoryException can occur.
+② Because it’s bound by a weak reference, the JVM will GC it is no more referenced.
+
+
+JVM: 软引用 & 弱引用
+
+这些对象在给定的时间保证在jvm中是单个的，但在应用程序生存期内不保证是单个的。如果没有更多强引用，则可以通过GC进行创建，然后再重新创建。
+
+因此，在应用程序的生命周期中，可能多次调用提供的函数，也可能不会多次调用该函数。
+
+示例：创建一个在给定时间仅存在一次的Cache对象
+```
+val kodein = Kodein {
+    bind<Map>() with singleton(ref = softReference) { WorldMap() } 
+    bind<Client>() with singleton(ref = weakReference) { id -> clientFromDB(id) } 
+}
+```
+① 由于它是通过软引用绑定的，JVM将在任何OutOfMemoryException可能发生的时候回收它
+② 由于它是通过弱引用绑定的，JVM将在没有更多引用的时候回收它。
+
+Weak singletons use JVM’s WeakReference while soft singletons use JVM’s SoftReference.
+
+JVM: Thread local
+
+This is the same as the standard singleton binding, except that each thread gets a different instance. Therefore, the provided function will be called once per thread that needs the instance, the first time it is requested.
+
+Example: creates a Cache object that will exist once per thread
+
+```
+val kodein = Kodein {
+    bind<Cache>() with singleton(ref = threadLocal) { LRUCache(16 * 1024) }
+}
+```
+> Semantically, thread local singletons should use [scoped-singletons], the reason it uses a referenced singleton is because Java’s ThreadLocal acts like a reference.
+
+> Thread locals are not available in JavaScript.
+
+弱单例使用JVM的WeakReference，而软单例使用JVM的SoftReference
+
+JVM：本地线程
+
+这与标准单例绑定相同，除了每个线程获得不同的实例。因此，所提供的函数将在需要实例的每个需要实例的线程中被调用一次。
+
+示例：创建一个每个线程将存在一次的Cache对象
+
+```
+val kodein = Kodein {
+    bind<Cache>() with singleton(ref = threadLocal) { LRUCache(16 * 1024) }
+}
+```
+
+> 从语义上讲，线程局部单例应该使用[scoped-singletons]，它使用引用的单例的原因是因为Java的ThreadLocal就像引用一样。
+
+> 线程本地语言在JavaScript中不可用。
+
+
+
 #### <h2 id="4.7">4.7. Instance binding</h2>
-#### <h2 id="4.8">4.8. Direct binding</h2>
-#### <h2 id="4.9">4.9. Subtypes bindings</h2>
-#### <h2 id="4.10">4.10. Transitive dependencies</h2>
-#### <h2 id="4.11">4.11. Being responsible for its own retrieval</h2>
+This binds a type to an instance that already exist.
+
+Example: a DataSource binding to an already existing instance.
+
+```
+val kodein = Kodein {
+    bind<DataSource>() with instance(SqliteDataSource.open("path/to/file")) 
+}
+```
+①Instance is used with parenthesis: it is not given a function, but an instance.
+
+
+#### <h2 id="4.8">4.9. Constant binding</h2>
+It is often useful to bind "configuration" constants.
+
+> Constants are always tagged.
+
+Example: two constants
+```
+val kodein = Kodein {
+    constant(tag = "maxThread") with 8 
+    constant(tag = "serverURL") with "https://my.server.url" 
+}
+```
+① Note the absence of curly braces: it is not given a function, but an instance.
+
+>	You should only use constant bindings for very simple types without inheritance or interface (e.g. primitive types and data classes).
+
+#### <h2 id="4.8">4.9. Direct binding</h2>
+Sometimes, it may seem overkill to specify the type to bind if you are binding the same type as you are creating.
+
+For this use case, you can transform any bind<Type>() with …​ to bind() from …​.
+	
+Example: direct bindings
+```
+val kodein = Kodein {
+    bind() from singleton { RandomDice(6) }
+    bind("DnD20") from provider { RandomDice(20) }
+    bind() from instance(SqliteDataSource.open("path/to/file"))
+}
+```
+>This should be used with care as binding a concrete class and, therefore, having concrete dependencies is an anti-pattern that later prevents modularisation and mocking / testing.
+
+>	When using kodein-generic-* and binding a generic type, the bound type will be the specialized type,
+e.g. bind() from singleton { listOf(1, 2, 3, 4) } registers the binding to List<Int>.
+
+> 	If you are using Kodein/Native, because of this bug, you need to use the uppercase version: Bind() from. This issue has been fixed and the bind() from syntax will be available to Kodein/Native as soon as Kotlin/Native 0.6 is released.
+
+#### <h2 id="4.9">4.10. Subtypes bindings</h2>
+Kodein allows you register a "subtype bindings factory". These are big words for a simple concept that’s best explained with an example:
+
+Example: direct bindings
+```
+val kodein = Kodein {
+    bind<Controller>().subtypes() with { type ->
+        when (type.jvmType) { 
+            MySpecialController::class.java -> singleton { MySpecialController() }
+            else -> provider { myControllerSystem.getController(type.jvmType) }
+        }
+    }
+}
+```
+① 	As type is a TypeToken<*>, you can use .jvmType to get the JVM type (e.g. Class or ParameterizedType).
+
+In essence, bind<Whatever>().subtypes() with { type → binding } allows you to register, in Kodein, a binding factory that will be called for subtypes of the provided type.
+
+
+#### <h2 id="4.10">4.11. Transitive dependencies</h2>
+With those lazily instantiated dependencies, a dependency (very) often needs another dependency. Such classes can have their dependencies passed to their constructor. Thanks to Kotlin’s killer type inference engine, Kodein makes retrieval of transitive dependencies really easy.
+
+Example: a class that needs transitive dependencies
+```
+class Dice(private val random: Random, private val sides: Int) {
+/*...*/
+}
+```
+
+It is really easy to bind this RandomDice with its transitive dependencies, by simply using instance() or instance(tag).
+
+Example: bindings of a Dice and of its transitive dependencies
+```
+val kodein = Kodein {
+    bind<Dice>() with singleton { Dice(instance(), instance(tag = "max")) } 
+
+    bind<Random>() with provider { SecureRandom() } 
+    constant(tag "max") with 5 
+}
+```
+① Binding of Dice. It gets its transitive dependencies by using instance() and instance(tag).
+② Bindings of Dice transitive dependencies.
+
+> The order in which the bindings are declared has no importance whatsoever.
+
+The binding functions are in the same environment as the newInstance function described in the dependency injection section. You can read it to learn more about the instance, provider and factory functions available to the function.
+
+Transitive factory dependencies
+
+Maybe you need a dependency to use one of its functions to create the bound type.
+
+Example: using a DataSource to create a Connection.
+
+```
+val kodein = Kodein {
+    bind<DataSource>() with singleton { MySQLDataSource() }
+    bind<Connection>() with provider { instance<DataSource>().openConnection() } 
+}
+```
+① 	Using a DataSource as a transitive factory dependency. 
+
+#### <h2 id="4.11">4.12. Being responsible for its own retrieval</h2>
+If the bound class is KodeinAware, you can pass the kodein object to the class so it can itself use the Kodein container to retrieve its own dependencies.
+
+Example: bindings of Manager that is responsible for retrieving its own dependencies
+```
+val kodein = Kodein {
+    bind<Manager>() with singleton { ManagerImpl(kodein) } 
+}
+```
+① 	ManagerImpl is given a Kodein instance.
 
 
 
