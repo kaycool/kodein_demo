@@ -627,8 +627,9 @@ val kodein = Kodein {
 
 ###  <h2 id="5">五.Bindings separation</h2>
 #### <h2 id="5.1">5.1. Modules</h2>
-
-
+##### <h3 id="5.1.1">5.1.1. Definition</h3>
+##### <h3 id="5.1.2">5.1.2. Name uniqueness</h3>
+##### <h3 id="5.1.3">5.1.3. Import once</h3>
 
 
 #### <h2 id="5.2">5.2. Extension (composition) (Gradle)</h2>
@@ -637,10 +638,34 @@ val kodein = Kodein {
 
 
 ###  <h2 id="6">六.Dependency injection & retrieval</h2>
+
 #### <h2 id="6.1">6.1. Retrieval rules</h2>
+
 #### <h2 id="6.2">6.2. Injection & Retrieval</h2>
+##### <h3 id="6.2.1">6.2.1. Base methods</h3>
+
 #### <h2 id="6.3">6.3. Injection</h2>
+##### <h3 id="6.3.1">6.3.1. Simple case</h3>
+##### <h3 id="6.3.2">6.3.2. Multi-arguments factories</h3>
+##### <h3 id="6.3.3">6.3.3. Currying factories</h3>
+##### <h3 id="6.3.4">6.3.4. Defining context</h3>
+
+
 #### <h2 id="6.4">6.4. Retrieval: the Kodein container</h2>
+##### <h3 id="6.4.1">6.4.1 everything is lazy by default!</h3>
+##### <h3 id="6.4.2">6.4.2 Kodein methods</h3>
+##### <h3 id="6.4.3">6.4.3 Constants</h3>
+##### <h3 id="6.4.4">6.4.4 Named bindings</h3>
+##### <h4 id="6.4.5">6.4.5 Multi-arguments factories</h3>
+##### <h4 id="6.4.5.1">6.4.5.1 Factory retrieval</h3>
+##### <h3 id="6.4.6">6.4.6 Currying factories</h3>
+##### <h3 id="6.4.7">6.4.7 Defining context</h3>
+##### <h3 id="6.4.8">6.4.8 Using a Trigger</h3>
+##### <h3 id="6.4.9">6.4.9 Lazy access</h3>
+##### <h3 id="6.4.10">6.4.10 Late init</h3>
+##### <h3 id="6.4.11">All matches</h3>
+
+
 #### <h2 id="6.5">6.5. Retrieval: being KodeinAware</h2>
 #### <h2 id="6.6">6.6. Retrieval: Direct</h2>
 #### <h2 id="6.7">6.7. Error messages</h2>
