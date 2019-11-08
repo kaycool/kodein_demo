@@ -36,6 +36,9 @@
    
 * [五.Bindings separation](#5)
    * [Modules](#5.1)
+      * [Definition](#5.1.1)
+      * [Name uniqueness](#5.1.2)
+      * [Import once](#5.1.3)
    * [Extension (composition)](#5.2)
    * [Overriding](#5.3)
    * [Overridden access from parent](#5.4)
@@ -44,8 +47,25 @@
 * [六.Dependency injection & retrieval](#6)
    * [Retrieval rules](#6.1)
    * [Injection & Retrieval](#6.2)
+      * [Base methods](#6.2.1)
    * [Injection](#6.3)
+      * [Simple case](#6.3.1)
+      * [Multi-arguments factories](#6.3.2)
+      * [Currying factories](#6.3.3)
+      * [Defining context](#6.3.4)
    * [Retrieval: the Kodein container](#6.4)
+      * [everything is lazy by default!](#6.4.1)
+      * [Kodein methods](#6.4.2)
+      * [Constants](#6.4.3)
+      * [Named bindings](#6.4.4)
+      * [Multi-arguments factories](#6.4.5)
+      	* [Factory retrieval](#6.4.5.1)
+      * [Currying factories](#6.4.6)
+      * [Defining context](#6.4.7)
+      * [Using a Trigger](#6.4.8)
+      * [Lazy access](#6.4.9)
+      * [Late init](#6.4.10)
+      * [All matches](#6.4.11)
    * [Retrieval: being KodeinAware](#6.5)
    * [Retrieval: Direct](#6.6)
    * [Error messages](#6.7)
@@ -588,6 +608,10 @@ val kodein = Kodein {
 
 ###  <h2 id="5">五.Bindings separation</h2>
 #### <h2 id="5.1">5.1. Modules</h2>
+
+
+
+
 #### <h2 id="5.2">5.2. Extension (composition) (Gradle)</h2>
 #### <h2 id="5.3">5.3. Overriding</h2>
 #### <h2 id="5.4">5.4. Overridden access from parent</h2>
