@@ -489,11 +489,7 @@ val kodein = Kodein {
     constant(tag = "serverURL") with "https://my.server.url" 
 }
 ```
-① 注意，没有花括号:没有给它一个函数，而是一个实例
-> 
-① Note the absence of curly braces: it is not given a function, but an instance.
-
->	  (e.g. primitive types and data classes).
+① 注意，没有花括号:没有给它一个函数，而是一个实例(e.g. 基本类型和数据类)
 
 #### <h2 id="4.9">4.9. Direct binding</h2>
 Sometimes, it may seem overkill to specify the type to bind if you are binding the same type as you are creating.
