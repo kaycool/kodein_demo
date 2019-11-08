@@ -515,7 +515,7 @@ val kodein = Kodein {
 ①Instance is used with parenthesis: it is not given a function, but an instance.
 
 
-#### <h2 id="4.8">4.9. Constant binding</h2>
+#### <h2 id="4.8">4.8. Constant binding</h2>
 It is often useful to bind "configuration" constants.
 
 > Constants are always tagged.
@@ -531,7 +531,7 @@ val kodein = Kodein {
 
 >	You should only use constant bindings for very simple types without inheritance or interface (e.g. primitive types and data classes).
 
-#### <h2 id="4.8">4.9. Direct binding</h2>
+#### <h2 id="4.9">4.9. Direct binding</h2>
 Sometimes, it may seem overkill to specify the type to bind if you are binding the same type as you are creating.
 
 For this use case, you can transform any bind<Type>() with …​ to bind() from …​.
@@ -551,7 +551,7 @@ e.g. bind() from singleton { listOf(1, 2, 3, 4) } registers the binding to List<
 
 > 	If you are using Kodein/Native, because of this bug, you need to use the uppercase version: Bind() from. This issue has been fixed and the bind() from syntax will be available to Kodein/Native as soon as Kotlin/Native 0.6 is released.
 
-#### <h2 id="4.9">4.10. Subtypes bindings</h2>
+#### <h2 id="4.10">4.10. Subtypes bindings</h2>
 Kodein allows you register a "subtype bindings factory". These are big words for a simple concept that’s best explained with an example:
 
 Example: direct bindings
@@ -570,7 +570,7 @@ val kodein = Kodein {
 In essence, bind<Whatever>().subtypes() with { type → binding } allows you to register, in Kodein, a binding factory that will be called for subtypes of the provided type.
 
 
-#### <h2 id="4.10">4.11. Transitive dependencies</h2>
+#### <h2 id="4.11">4.11. Transitive dependencies</h2>
 With those lazily instantiated dependencies, a dependency (very) often needs another dependency. Such classes can have their dependencies passed to their constructor. Thanks to Kotlin’s killer type inference engine, Kodein makes retrieval of transitive dependencies really easy.
 
 Example: a class that needs transitive dependencies
@@ -612,7 +612,7 @@ val kodein = Kodein {
 ```
 ① 	Using a DataSource as a transitive factory dependency. 
 
-#### <h2 id="4.11">4.12. Being responsible for its own retrieval</h2>
+#### <h2 id="4.12">4.12. Being responsible for its own retrieval</h2>
 If the bound class is KodeinAware, you can pass the kodein object to the class so it can itself use the Kodein container to retrieve its own dependencies.
 
 Example: bindings of Manager that is responsible for retrieving its own dependencies
