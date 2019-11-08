@@ -510,9 +510,11 @@ val kodein = Kodein {
 > 如果使用的是Kodein / Native，则由于此错误，您需要使用大写版本：Bind（）from。 此问题已得到修复，并且Kotlin / Native 0.6发行后，来自语法的bind（）将可用于Kodein / Native。
 
 #### <h2 id="4.10">4.10. Subtypes bindings</h2>
-Kodein allows you register a "subtype bindings factory". These are big words for a simple concept that’s best explained with an example:
 
-Example: direct bindings
+Kodein 容许你注册一个"子类型绑定工厂". 这些是一个简单概念的大词，最好用一个例子来解释：
+
+示例：直接绑定
+
 ```
 val kodein = Kodein {
     bind<Controller>().subtypes() with { type ->
@@ -523,14 +525,15 @@ val kodein = Kodein {
     }
 }
 ```
-① 	As type is a TypeToken<*>, you can use .jvmType to get the JVM type (e.g. Class or ParameterizedType).
+① 由于类型是TypeToken<*>，你可以使用.jvmType去获取JVM类型（e.g. Class or ParameterizedType).
 
-In essence, bind<Whatever>().subtypes() with { type → binding } allows you to register, in Kodein, a binding factory that will be called for subtypes of the provided type.
+本质上，带有{type→binding}的bind <Whatever>().subtypes() 允许您在Kodein中注册绑定工厂，该工厂将被提供的类型的子类型调用。
 
 
 #### <h2 id="4.11">4.11. Transitive dependencies</h2>
-With those lazily instantiated dependencies, a dependency (very) often needs another dependency. Such classes can have their dependencies passed to their constructor. Thanks to Kotlin’s killer type inference engine, Kodein makes retrieval of transitive dependencies really easy.
+对于那些延迟实例化的依赖项，一个（非常）依赖项通常需要另一个依赖项。 此类可以将其依赖项传递给其构造函数。 多亏Kotlin的杀手级类型推断引擎，Kodein才使检索传递依赖关系变得非常容易。
 
+示例: 需要传递依赖项的类
 Example: a class that needs transitive dependencies
 ```
 class Dice(private val random: Random, private val sides: Int) {
@@ -538,9 +541,9 @@ class Dice(private val random: Random, private val sides: Int) {
 }
 ```
 
-It is really easy to bind this RandomDice with its transitive dependencies, by simply using instance() or instance(tag).
+只需使用instance（）或instance（tag），就很容易将此RandomDice与它的传递依赖项绑定在一起。
 
-Example: bindings of a Dice and of its transitive dependencies
+示例：Dice及其传递依赖项的绑定
 ```
 val kodein = Kodein {
     bind<Dice>() with singleton { Dice(instance(), instance(tag = "max")) } 
