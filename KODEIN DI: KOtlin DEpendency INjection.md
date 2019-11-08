@@ -492,11 +492,11 @@ val kodein = Kodein {
 ① 注意，没有花括号:没有给它一个函数，而是一个实例(e.g. 基本类型和数据类)
 
 #### <h2 id="4.9">4.9. Direct binding</h2>
-Sometimes, it may seem overkill to specify the type to bind if you are binding the same type as you are creating.
+有时，如果要绑定与创建时相同的类型，则指定要绑定的类型似乎有点过头了。
 
-For this use case, you can transform any bind<Type>() with …​ to bind() from …​.
+对于此用例，您可以将任何带有 with...的bind <Type>（）转换为from…的bind（）。
 	
-Example: direct bindings
+示例: 直接绑定
 ```
 val kodein = Kodein {
     bind() from singleton { RandomDice(6) }
@@ -504,12 +504,10 @@ val kodein = Kodein {
     bind() from instance(SqliteDataSource.open("path/to/file"))
 }
 ```
->This should be used with care as binding a concrete class and, therefore, having concrete dependencies is an anti-pattern that later prevents modularisation and mocking / testing.
-
->	When using kodein-generic-* and binding a generic type, the bound type will be the specialized type,
-e.g. bind() from singleton { listOf(1, 2, 3, 4) } registers the binding to List<Int>.
-
-> 	If you are using Kodein/Native, because of this bug, you need to use the uppercase version: Bind() from. This issue has been fixed and the bind() from syntax will be available to Kodein/Native as soon as Kotlin/Native 0.6 is released.
+> 绑定具体类时应谨慎使用，因此，具有具体依赖关系是一种反模式，以后会阻止模块化和模拟/测试。
+> 当使用kodein-generic-*并绑定一个通用类型时，绑定类型将是专用类型，e.g. 单例{listOf（1、2、3、4）的bind（）将绑定注册到List <Int>
+> 如果你使用Kodein/Native，由于这个bug，你需要使用
+> 如果使用的是Kodein / Native，则由于此错误，您需要使用大写版本：Bind（）from。 此问题已得到修复，并且Kotlin / Native 0.6发行后，来自语法的bind（）将可用于Kodein / Native。
 
 #### <h2 id="4.10">4.10. Subtypes bindings</h2>
 Kodein allows you register a "subtype bindings factory". These are big words for a simple concept that’s best explained with an example:
