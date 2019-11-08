@@ -676,15 +676,33 @@ val kodein = Kodein {
 
 
 #### <h2 id="6.6">6.6. Retrieval: Direct</h2>
+##### <h3 id="6.6.1">6.6.1 Being DKodeinAware</h3>
+##### <h3 id="6.6.2">6.6.2 In Java</h3>
+
+
 #### <h2 id="6.7">6.7. Error messages</h2>
 
 ###  <h2 id="7">七.Using the environment</h2>
 #### <h2 id="7.1">7.1. Context</h2>
 #### <h2 id="7.2">7.2. Scope</h2>
+##### <h3 id="7.2.1">7.2.1 Scope closeable</h3>
+##### <h3 id="7.2.2">7.2.2 JVM references in scopes</h3>
+##### <h3 id="7.2.3">7.2.3 Weak Context Scope</h3>
+##### <h3 id="7.2.4">7.2.4 Context translators</h3>
+##### <h3 id="7.2.5">7.2.5 Context finder</h3>
+
 #### <h2 id="7.3">7.3. Scope creation</h2>
+##### <h3 id="7.3.1">7.3.1 Scope registry</h3>
+###### <h4 id="7.3.1.1">7.3.1.1 JVM references in scopes</h4>
+###### <h4 id="7.3.1.2">7.3.1.2 Weak Context Scope</h4>
+##### <h3 id="7.3.2">7.3.2 Sub-scopes</h3>
+
 
 ###  <h2 id="8">八.Multi-binding</h2>
 #### <h2 id="8.1">8.1. In a Set</h2>
+##### <h3 id="8.1.1">8.1.1 Binding in a Set</h3>
+##### <h3 id="8.1.2">8.1.2 Retrieving from a Set</h3>
+
 #### <h2 id="8.2">8.2. In a map</h2>
 #### <h2 id="8.3">8.3. Print bindings</h2>
 #### <h2 id="8.4">8.4. Recursive dependency loop</h2>
