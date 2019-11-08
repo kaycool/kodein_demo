@@ -466,33 +466,34 @@ val kodein = Kodein {
 
 
 #### <h2 id="4.7">4.7. Instance binding</h2>
-This binds a type to an instance that already exist.
+这会将类型绑定到已经存在的实例。
 
-Example: a DataSource binding to an already existing instance.
+示例：DataSource 绑定到现有实例的DataSource
 
 ```
 val kodein = Kodein {
     bind<DataSource>() with instance(SqliteDataSource.open("path/to/file")) 
 }
 ```
-①Instance is used with parenthesis: it is not given a function, but an instance.
-
+①实例与括号一起使用：它没有提供功能，而是实例。
 
 #### <h2 id="4.8">4.8. Constant binding</h2>
-It is often useful to bind "configuration" constants.
+这个经常被用来绑定“配置”常量
 
-> Constants are always tagged.
+> 常量总是被标记
 
-Example: two constants
+示例：两个常量
 ```
 val kodein = Kodein {
     constant(tag = "maxThread") with 8 
     constant(tag = "serverURL") with "https://my.server.url" 
 }
 ```
+① 注意，没有花括号:没有给它一个函数，而是一个实例
+> 
 ① Note the absence of curly braces: it is not given a function, but an instance.
 
->	You should only use constant bindings for very simple types without inheritance or interface (e.g. primitive types and data classes).
+>	  (e.g. primitive types and data classes).
 
 #### <h2 id="4.9">4.9. Direct binding</h2>
 Sometimes, it may seem overkill to specify the type to bind if you are binding the same type as you are creating.
