@@ -671,7 +671,7 @@ val kodein = Kodein {
 ##### <h3 id="6.5.2">6.5.2 Class global context</h3>
 ##### <h3 id="6.5.3">6.5.3 Class global trigger</h3>
 ##### <h3 id="6.5.4">6.5.4 Lazy access</h3>
-##### <h4 id="6.5.5">6.5.5 Lateinitthe</h3>
+##### <h3 id="6.5.5">6.5.5 Lateinitthe</h3>
 ##### <h3 id="6.5.6">6.5.6 All matches</h3>
 
 
