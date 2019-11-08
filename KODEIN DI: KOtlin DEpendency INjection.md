@@ -398,15 +398,18 @@ val kodein = Kodein {
 ```
 
 #### <h2 id="4.5">4.5. Multiton binding</h2>
+
 A multiton can be thought of a "singleton factory": it guarantees to always return the same object given the same argument. In other words, for a given argument, the first time a multiton is called with this argument, it will call the function to create an instance; and will always yield that same instance when called with the same argument.
 
-Example: creates one random generator for each value
+一个多例绑定可以被认为是一个 "singleton factory":它保证增总是正在给定相同参数的情况下返回相同的对象。换句话说，对于给定的参数，第一次使用此参数调用multiton，它将调用函数创建一个实例；并且在使用相同参数调用multiton时始终产生相同实例。
+
+示例: 为每个值创建一个随机生成器
 ```
 val kodein = Kodein {
     bind<RandomGenerator>() with multiton { max: Int -> SecureRandomGenerator(max) }
 }
 ```
-Just like a factory, a multiton can take multiple (up to 5) arguments.
+就像工厂一样，一个multiton可以接受多个（最多5个）参数。
 
 ##### <h2 id="4.5.1">4.5.1 non-synced multiton</h2>
 就像单例一样，可以禁用多例同步：
@@ -419,35 +422,12 @@ val kodein = Kodein {
 ```
 
 #### <h2 id="4.6">4.6. Referenced singleton or multiton binding</h2>
-A referenced singleton is an object that is guaranteed to be single as long as a reference object can return it. A referenced multiton is an object that is guaranteed to be single for the same argument as long as a reference object can return it.
-
-A referenced singleton or multiton needs a "reference maker" in addition to the classic construction function that determines the type of reference that will be used.
-
-Kodein comes with three reference makers for the JVM:
 
 引用的单例是一个对象，只要引用对象可以返回它，它就可以保证是单一的。引用的多态对象是一个对象，只要引用对象可以将其返回，它可以保证对于同一参数是单一的。
 
 引用的单例或多例除了需要确定将要使用的引用类型的经典构造函数之外，还需要“引用创建者”。
 
 Kodein随附三个JVM参考制造者：
-
-JVM: Soft & weak
-
-These are objects that are guaranteed to be single in the JVM at a given time, but not guaranteed to be single during the application lifetime. If there are no more strong references to the instances, they may be GC’d and later, re-created.
-
-Therefore, the provided function may or may not be called multiple times during the application lifetime.
-
-Example: creates a Cache object that will exist only once at a given time
-
-```
-val kodein = Kodein {
-    bind<Map>() with singleton(ref = softReference) { WorldMap() } 
-    bind<Client>() with singleton(ref = weakReference) { id -> clientFromDB(id) } 
-}
-```
-① Because it’s bound by a soft reference, the JVM will GC it before any OutOfMemoryException can occur.
-② Because it’s bound by a weak reference, the JVM will GC it is no more referenced.
-
 
 JVM: 软引用 & 弱引用
 
@@ -464,23 +444,6 @@ val kodein = Kodein {
 ```
 ① 由于它是通过软引用绑定的，JVM将在任何OutOfMemoryException可能发生的时候回收它
 ② 由于它是通过弱引用绑定的，JVM将在没有更多引用的时候回收它。
-
-Weak singletons use JVM’s WeakReference while soft singletons use JVM’s SoftReference.
-
-JVM: Thread local
-
-This is the same as the standard singleton binding, except that each thread gets a different instance. Therefore, the provided function will be called once per thread that needs the instance, the first time it is requested.
-
-Example: creates a Cache object that will exist once per thread
-
-```
-val kodein = Kodein {
-    bind<Cache>() with singleton(ref = threadLocal) { LRUCache(16 * 1024) }
-}
-```
-> Semantically, thread local singletons should use [scoped-singletons], the reason it uses a referenced singleton is because Java’s ThreadLocal acts like a reference.
-
-> Thread locals are not available in JavaScript.
 
 弱单例使用JVM的WeakReference，而软单例使用JVM的SoftReference
 
