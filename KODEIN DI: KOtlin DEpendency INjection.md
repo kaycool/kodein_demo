@@ -1,4 +1,4 @@
-[原英文文档地址](https://kodein.org/Kodein-DI/index.html?latest/core)
+[原英文文档地址](https://kodein.org/Kodein-DI/?6.5/core)
 
 # KODEIN DI: KOtlin DEpendency INjection
 
