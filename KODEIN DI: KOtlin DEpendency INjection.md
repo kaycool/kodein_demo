@@ -612,17 +612,208 @@ val kodein = Kodein {
 
 
 ##### <h3 id="5.1.2">5.1.2. Name uniqueness</h3>
-##### <h3 id="5.1.3">5.1.3. Import once</h3>
+Each module name should only be imported once.
 
+If a second module with the name of an already imported module is imported, then Kodein will fail.
+
+However, you cannot always ensure that every module name is unique: you may need to import modules that are defined outside of your code. Kodein offers two ways to mitigate that:
+
+1. Rename a module:
+   Use when you are importing a module whose name already exists.
+   
+   Example: imports a renamed module
+   ```
+   val kodein = Kodein {
+    import(apiModule.copy(name = "otherAPI"))
+    }
+   ```
+ 
+2. Add a prefix to modules imported by a module:
+Use when a module imported by another module uses a names which already exists.
+
+   Example: imports a module with a prefix for sub-modules
+   ```
+   val kodein = Kodein {
+    import(apiModule.copy(prefix = "otherAPI-"))
+    }
+   ```
+
+##### <h3 id="5.1.3">5.1.3. Import once</h3>
+You may define a module which you know depends on another module, so it would be great to import that dependency inside the module that has the dependency. However, each module can only be imported once, so if every module that depends on another module imports it, Kodein will fail at the second module that imports it.
+
+To support this, Kodein offers importOnce: it imports the module if no module with that name was previously imported.
+
+Example: importing a module only once
+```
+val appModule = Kodein.Module {
+    importOnce(apiModule)
+}
+```
 
 #### <h2 id="5.2">5.2. Extension (composition) (Gradle)</h2>
-#### <h2 id="5.3">5.3. Overriding</h2>
-#### <h2 id="5.4">5.4. Overridden access from parent</h2>
+Kodein allows you to create a new Kodein instance by extending an existing one.
 
+Example: extends an already existing Kodein instance
+```
+val subKodein = Kodein {
+    extend(appKodein)
+    /* other bindings */
+}
+```
+> This preserves bindings, meaning that a singleton in the parent Kodein will continue to exist only once. Both parent and child Kodein objects will give the same instance.
+
+#### <h2 id="5.3">5.3. Overriding</h2>
+By default, overriding a binding is not allowed in Kodein. That is because accidentally binding twice the same (class,tag) to different instances/providers/factories can cause real headaches to debug.
+
+However, when intended, it can be really interesting to override a binding, especially when creating a testing environment. You can override an existing binding by specifying explicitly that it is an override.
+
+Example: binds twice the same type, the second time explitly specifying an override
+
+```
+val kodein = Kodein {
+    bind<API>() with singleton { APIImpl() }
+    /* ... */
+    bind<API>(overrides = true) with singleton { OtherAPIImpl() }
+}
+```
+
+By default, modules are not allowed to override, even explicitly. You can allow a module to override some of your bindings when you import it (the same goes for extension):
+
+Example: imports a module and giving it the right to override existing bindings.
+```
+val kodein = Kodein {
+    /* ... */
+    import(testEnvModule, allowOverride = true)
+}
+```
+> The bindings in the module still need to specify explicitly the overrides.
+
+Sometimes, you just want to define bindings without knowing if you are actually overriding a previous binding or defining a new. Those cases should be rare and you should know what you are doing.
+
+Example: declaring a module in which each binding may or may not override existing bindings.
+```
+val testModule = Kodein.Module(name = "test", allowSilentOverride = true) {
+    bind<EmailClient>() with singleton { MockEmailClient() } 
+}
+```
+① Maybe adding a new binding, maybe overriding an existing one, who knows?
+
+If you want to access an instance retrieved by the overridden binding, you can use overriddenInstance. This is useful if you want to "enhance" a binding (for example, using the decorator pattern).
+
+Example: declaring a module in which each binding may or may not override existing bindings.
+
+```
+val testModule = Kodein.Module(name = "test") {
+    bind<Logger>(overrides = true) with singleton { FileLoggerWrapper("path/to/file", overriddenInstance()) } 
+}
+```
+① overriddenInstance() will return the Logger instance retrieved by the overridden binding.
+
+#### <h2 id="5.4">5.4. Overridden access from parent</h2>
+Let’s consider the following code :
+
+Example: Mixing overriding & extension
+```
+val parent = Kodein {
+    bind<Foo>() with provider { Foo1() }
+    bind<Bar>() with singleton { Bar(foo = instance<Foo>()) }
+}
+
+val child = Kodein {
+    extend(parent)
+    bind<Foo>(overrides = true) with provider { Foo2() }
+}
+
+val foo = child.instance<Bar>().foo
+```
+
+In this example, the foo variable will be of type Foo1. Because the Bar binding is a singleton and is declared in the parent Kodein, it does not have access to bindings declared in child. In this example, both parent.instance<Bar>().foo and child.instance<Bar>().foo will yield a Foo1 object.
+
+>	This is because Bar is bound to a singleton, the first access would define the container used (parent or child). If the singleton were initialized by child, then a subsequent access from parent would yeild a Bar with a reference to a Foo2, 	which is not supposed to exist in parent.
+By default, all bindings that do not cache instances (basically all bindings but singleton and multiton) are copied by default into the new container, and therefore have access to the bindings & overrides of this new container.
+	
+If you want the Bar singleton to have access to the overridden Foo binding, you need to copy it into the child container.
+
+Example: Copying the bar binding into the child container
+```
+val child = Kodein {
+    extend(parent, copy = Copy {
+        copy the binding<Bar>() 
+    })
+    bind<Foo>(overrides = true) with provider { Foo2() }
+}
+```
+> Copying a binding means that it will exists once more. Therefore, a copied singleton will no longer be unique and have TWO instances, one managed by each binding (the original and the copied).
+
+If the binding you need to copy is bound by a context (such as a scoped singleton), you need to specify it:
+
+Example: Copying a tagged scoped singleton
+```
+val parent = Kodein {
+    bind<Session>(tag = "req") with scoped(requestScope).singleton { context.session() }
+}
+
+val child = Kodein {
+    extend(parent, copy = Copy {
+        copy the binding<Session>() with scope(requestScope) and tag("req")
+    })
+    bind<Foo>(overrides = true) with provider { Foo2() }
+}
+```
+> You can use the context<>(), scope() and tag() functions to specialise your binding copies.
+
+You can also copy all bindings that matches a particular definition :
+Example: Copying all that matches
+```
+val child = Kodein {
+    extend(parent, copy = Copy {
+        copy all binding<String>() 
+        copy all scope(requestScope) 
+    })
+}
+```
+① Will copy all bindings for a String, with or without a context, scope, tag or argument.
+② Will copy all bindings that are scoped inside a RequestScope.
+
+Finally, you can simply copy all bindings:
+
+Example: Copying all
+```
+val child = Kodein {
+    extend(parent, copy = Copy.All)
+}
+```
+Or you can decide that none are copied (if you do want existing bindings to have access to new bindings):
+
+Example: Copying none
+```
+val child = Kodein {
+    extend(parent, copy = Copy.None)
+}
+```
 
 ###  <h2 id="6">六.Dependency injection & retrieval</h2>
+Example bindings that are used throughout the chapter:
+```
+val kodein = Kodein {
+    bind<Dice>() with factory { sides: Int -> RandomDice(sides) }
+    bind<DataSource>() with singleton { SqliteDS.open("path/to/file") }
+    bind<Random>() with provider { SecureRandom() }
+    bind<FileAccess>() with factory { path: String, mode: Int -> FileAccess.open(path, mode) }
+    constant("answer") with "fourty-two"
+}
+```
 
 #### <h2 id="6.1">6.1. Retrieval rules</h2>
+When retrieving a dependency, the following rules apply:
+* A dependency bound with a provider, an instance, a singleton, an eagerSingleton, or a constant can be retrieved:
+	* as a provider method: () → T
+	* as an instance: T
+	
+* A dependency bound with a factory or a multiton can only be retrieved as a factory method: (A) → T.
+	* as a factory method: (A) → T
+	* as a provider method: () → T if the argument A is provided at retrieval.
+	* as an instance: T if the argument A is provided at retrieval.
 
 #### <h2 id="6.2">6.2. Injection & Retrieval</h2>
 ##### <h3 id="6.2.1">6.2.1. Base methods</h3>
