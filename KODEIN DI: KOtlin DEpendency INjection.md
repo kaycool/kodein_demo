@@ -552,18 +552,18 @@ val kodein = Kodein {
     constant(tag "max") with 5 
 }
 ```
-① Binding of Dice. It gets its transitive dependencies by using instance() and instance(tag).
-② Bindings of Dice transitive dependencies.
+① Dice绑定。它通过使用instance() 和instance(tag)获得其传递依赖.
+② Dice传递依赖项的绑定.
 
-> The order in which the bindings are declared has no importance whatsoever.
+> 声明绑定的顺序并不重要.
 
-The binding functions are in the same environment as the newInstance function described in the dependency injection section. You can read it to learn more about the instance, provider and factory functions available to the function.
+绑定函数与依赖项注入部分中描述的newInstance函数处于同一环境中。 您可以阅读它，以了解有关该功能可用的实例，提供程序和工厂功能的更多信息。
 
-Transitive factory dependencies
+传递工厂依赖
 
-Maybe you need a dependency to use one of its functions to create the bound type.
+也许您需要一个依赖项才能使用其功能之一来创建绑定类型。
 
-Example: using a DataSource to create a Connection.
+示例：使用数据源创建连接
 
 ```
 val kodein = Kodein {
@@ -571,24 +571,46 @@ val kodein = Kodein {
     bind<Connection>() with provider { instance<DataSource>().openConnection() } 
 }
 ```
-① 	Using a DataSource as a transitive factory dependency. 
+① 使用数据源作为可传递工厂依赖项. 
 
 #### <h2 id="4.12">4.12. Being responsible for its own retrieval</h2>
-If the bound class is KodeinAware, you can pass the kodein object to the class so it can itself use the Kodein container to retrieve its own dependencies.
+如果绑定的类是KodeinAware，则可以将kodein对象传递给该类，以便它本身可以使用Kodein容器检索其自己的依赖项。
 
-Example: bindings of Manager that is responsible for retrieving its own dependencies
+示例：负责检索其自身依赖项的Manager的绑定
+
 ```
 val kodein = Kodein {
     bind<Manager>() with singleton { ManagerImpl(kodein) } 
 }
 ```
-① 	ManagerImpl is given a Kodein instance.
-
-
+① 给ManagerImpl一个Kodein实例。
 
 ###  <h2 id="5">五.Bindings separation</h2>
 #### <h2 id="5.1">5.1. Modules</h2>
 ##### <h3 id="5.1.1">5.1.1. Definition</h3>
+Kodein允许您将绑定导出到模块中。 让单独的模块定义自己的绑定而不是只有一个中央绑定定义非常有用。 模块是一个对象，您可以使用与构造Kodein实例完全相同的方式进行构造。
+
+Example: a simple module
+
+```
+val apiModule = Kodein.Module(name = "API") {
+    bind<API>() with singleton { APIImpl() }
+    /* other bindings */
+}
+```
+然后，在您的Kodein绑定块中：
+
+示例：导入模块
+
+```
+val kodein = Kodein {
+    import(apiModule)
+    /* other bindings */
+}
+```
+> 模块是定义，它们将在您使用的每个Kodein实例中重新声明其绑定。 如果创建定义单例的模块并将该模块导入两个不同的Kodein实例，则单例对象将存在两次：在每个Kodein实例中一次。
+
+
 ##### <h3 id="5.1.2">5.1.2. Name uniqueness</h3>
 ##### <h3 id="5.1.3">5.1.3. Import once</h3>
 
